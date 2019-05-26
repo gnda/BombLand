@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ContentModelStore">
+    <e p="$USER_HOME$/.Rider2019.1/system/extResources" t="IncludeRecursive" />
+    <e p="$USER_HOME$/.Rider2019.1/system/resharper-host/local/Transient/ReSharperHost/v191/SolutionCaches/_BombLand.-393248726.00" t="ExcludeRecursive" />
+    <e p="$PROJECT_DIR$" t="IncludeRecursive">
+      <e p="Assembly-CSharp.csproj" t="IncludeRecursive" />
+      <e p="Assets" t="Include">
+        <e p="Scripts" t="Include">
+          <e p="AllEvents.cs" t="Include" />
+          <e p="CameraController.cs" t="Include" />
+          <e p="Common" t="Include">
+            <e p="CustomTimer.cs" t="Include" />
+            <e p="FlagsManager.cs" t="Include" />
+            <e p="Manager.cs" t="Include" />
+            <e p="MathTools.cs" t="Include" />
+            <e p="MusicLoopsManager.cs" t="Include" />
+            <e p="PlaySoundOnClick.cs" t="Include" />
+            <e p="SfxManager.cs" t="Include" />
+            <e p="SimpleGameStateObserver.cs" t="Include" />
+            <e p="Singleton.cs" t="Include" />
+            <e p="SingletonGameStateObserver.cs" t="Include" />
+          </e>
+          <e p="Constants.cs" t="Include" />
+          <e p="EventManager" t="Include">
+            <e p="Event.cs" t="Include" />
+            <e p="EventManager.cs" t="Include" />
+            <e p="IEventHandler.cs" t="Include" />
+          </e>
+          <e p="GameManager.cs" t="Include" />
+          <e p="HudManager.cs" t="Include" />
+          <e p="IScore.cs" t="Include" />
+          <e p="LevelManager.cs" t="Include" />
+          <e p="MenuManager.cs" t="Include" />
+        </e>
+      </e>
+      <e p="BombLand.sln" t="IncludeFlat" />
+      <e p="Temp/bin" t="ExcludeRecursive" />
+      <e p="obj" t="ExcludeRecursive" />
+      <e p="packages" t="ExcludeRecursive" />
+    </e>
+  </component>
+</project>
