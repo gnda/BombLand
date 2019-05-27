@@ -6,8 +6,12 @@
     <e p="$PROJECT_DIR$" t="IncludeRecursive">
       <e p="Assembly-CSharp.csproj" t="IncludeRecursive" />
       <e p="Assets" t="Include">
+        <e p="Enemy" t="Include">
+          <e p="Enemy.cs" t="Include" />
+        </e>
         <e p="Scripts" t="Include">
           <e p="AllEvents.cs" t="Include" />
+          <e p="Bomb.cs" t="Include" />
           <e p="CameraController.cs" t="Include" />
           <e p="Common" t="Include">
             <e p="CustomTimer.cs" t="Include" />
@@ -27,11 +31,15 @@
             <e p="EventManager.cs" t="Include" />
             <e p="IEventHandler.cs" t="Include" />
           </e>
-          <e p="GameManager.cs" t="Include" />
-          <e p="HudManager.cs" t="Include" />
           <e p="IScore.cs" t="Include" />
-          <e p="LevelManager.cs" t="Include" />
-          <e p="MenuManager.cs" t="Include" />
+          <e p="Level.cs" t="Include" />
+          <e p="Managers" t="Include">
+            <e p="GameManager.cs" t="Include" />
+            <e p="HudManager.cs" t="Include" />
+            <e p="LevelsManager.cs" t="Include" />
+            <e p="MenuManager.cs" t="Include" />
+          </e>
+          <e p="PlayerController.cs" t="Include" />
         </e>
       </e>
       <e p="BombLand.sln" t="IncludeFlat" />
