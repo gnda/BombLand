@@ -4,7 +4,14 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - Monster
+  - Bullet
+  - Enemy
+  - Beam
+  - Ball
+  - Ground
+  - Limit
+  - Platform
+  - PowerCoin
   layers:
   - Default
   - TransparentFX

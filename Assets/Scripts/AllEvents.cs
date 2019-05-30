@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using SDD.Events;
@@ -24,10 +24,10 @@ public class GameVictoryEvent : SDD.Events.Event
 }
 public class GameStatisticsChangedEvent : SDD.Events.Event
 {
-    public int eBestScore { get; set; }
-    public int eScore { get; set; }
-    public int eNLives { get; set; }
-    public int eNEnemiesLeftBeforeVictory { get; set; }
+	public int eBestScore { get; set; }
+	public int eScore { get; set; }
+	public int eNLives { get; set; }
+	public int eNEnemiesLeftBeforeVictory { get; set; }
 }
 #endregion
 
@@ -52,16 +52,16 @@ public class NextLevelButtonClickedEvent : SDD.Events.Event
 #region Enemy Event
 public class EnemyHasBeenDestroyedEvent : SDD.Events.Event
 {
-    public Enemy eEnemy;
-    public bool eDestroyedByPlayer;
+	public Enemy eEnemy;
+	public bool eDestroyedByPlayer;
 }
 #endregion
 
 #region Bomb Events
 class BombHasBeenDestroyedEvent: SDD.Events.Event
 {
-    public Bomb eBomb;
-    public bool eDestroyedByPlayer;
+	public Bomb eBomb;
+	public bool eDestroyedByPlayer;
 }
 class AllBombsHaveBeenDestroyedEvent : SDD.Events.Event
 {
@@ -71,7 +71,7 @@ class AllBombsHaveBeenDestroyedEvent : SDD.Events.Event
 #region Score Event
 public class ScoreItemEvent : SDD.Events.Event
 {
-    public IScore eScore;
+	public IScore eScore;
 }
 #endregion
 
@@ -90,14 +90,14 @@ public class AllEnemiesOfLevelHaveBeenDestroyedEvent : SDD.Events.Event
 }
 public class BombPointsForPowerCoinsChangedEvent : SDD.Events.Event
 {
-    public float ePoints { get; set; }
+	public float ePoints { get; set; }
 }
 #endregion
 
 #region LevelsManager Events
 public class LevelHasBeenInstantiatedEvent : SDD.Events.Event
 {
-    public Level eLevel;
+	public Level eLevel;
 }
 #endregion
 
