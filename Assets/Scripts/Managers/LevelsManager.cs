@@ -48,7 +48,7 @@ public class LevelsManager : Manager<LevelsManager> {
 
 	void GenerateLevel(int levelIndex)
 	{
-		Instantiate(levelPrefabs[0], new Vector3(0,0,0), Quaternion.identity);
+		Instantiate(levelPrefabs[0], new Vector3(-5,-5,-5), Quaternion.identity);
 		// Iterate through it's pixel
 		for (int i = 0; i < levelDesigns[0].width; i++)
 		{
