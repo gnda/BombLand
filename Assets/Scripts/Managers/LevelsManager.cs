@@ -48,16 +48,21 @@ public class LevelsManager : Manager<LevelsManager> {
 
 	void GenerateLevel(int levelIndex)
 	{
-		Instantiate(levelPrefabs[0], new Vector3(-5,-5,-5), Quaternion.identity);
+		int i, j;
+		float z, x;
+		
 		// Iterate through it's pixel
-		for (int i = 0; i < levelDesigns[0].width; i++)
+		for (i = 0, z = 0; i < levelDesigns[0].width; i++, z++)
 		{
-			for (int j = 0; j < levelDesigns[0].height; j++)
+			for (j = 0, x = 0; j < levelDesigns[0].height; j++, x++)
 			{
-				Debug.Log(levelDesigns[0].GetPixel(i, j));
-				
+				//Debug.Log(levelDesigns[0].GetPixel(i, j));
+				GameObject tile = levelPrefabs[0];
+				tile.name = "";
+				Instantiate(levelPrefabs[0], new Vector3(x, -5, z), Quaternion.identity);
 			}
 		}
+		
 		//levelIndex = Mathf.Max(levelIndex, 0) % m_LevelsPrefabs.Length;
 		//m_CurrentLevelGO = Instantiate(m_LevelsPrefabs[levelIndex]);
 		//m_CurrentLevel = m_CurrentLevelGO.GetComponent<Level>();

@@ -26,7 +26,6 @@ public class PlayerController : SimpleGameStateObserver, IEventHandler{
 
 	private bool m_IsGrounded;
 
-
 	protected override void Awake()
 	{
 		base.Awake();
