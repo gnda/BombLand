@@ -56,10 +56,9 @@ public class LevelsManager : Manager<LevelsManager> {
 		{
 			for (j = 0, x = 0; j < levelDesigns[0].height; j++, x++)
 			{
-				//Debug.Log(levelDesigns[0].GetPixel(i, j));
-				GameObject tile = levelPrefabs[0];
-				tile.name = "";
-				Instantiate(levelPrefabs[0], new Vector3(x, -5, z), Quaternion.identity);
+				GameObject tile = Instantiate(levelPrefabs[0], new Vector3(x, -5, z), Quaternion.identity);
+				tile.name = "Tile (" + z + ", " + x + ")";
+				tile.GetComponent<Renderer>().material.color = levelDesigns[0].GetPixel(i,j);
 			}
 		}
 		
