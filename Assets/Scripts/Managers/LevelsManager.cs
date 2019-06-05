@@ -8,12 +8,12 @@ public class LevelsManager : Manager<LevelsManager> {
 
 	[Header("LevelsManager")]
 	#region levels & current level management
-	private int m_CurrentLevelIndex;
-	private GameObject m_CurrentLevelGO;
-	private Level m_CurrentLevel;
-	public Level CurrentLevel { get { return m_CurrentLevel; } }
-	[SerializeField] private Texture2D[] levelDesigns;
-	[SerializeField] private GameObject[] levelPrefabs;
+	private int currentLevelIndex;
+	private GameObject currentLevelGO;
+	private Level currentLevel;
+	public Level CurrentLevel { get { return currentLevel; } }
+
+	[SerializeField] private GameObject[] levelsPrefabs;
 
 	#endregion
 
@@ -41,40 +41,26 @@ public class LevelsManager : Manager<LevelsManager> {
 	#region Level flow
 	void Reset()
 	{
-		Destroy(m_CurrentLevelGO);
-		m_CurrentLevelGO = null;
-		m_CurrentLevelIndex = -1;
+		Destroy(currentLevelGO);
+		currentLevelGO = null;
+		currentLevelIndex = -1;
 	}
 
-	void GenerateLevel(int levelIndex)
+	void InstantiateLevel()
 	{
-		int i, j;
-		float z, x;
-		
-		// Iterate through it's pixel
-		for (i = 0, z = 0; i < levelDesigns[0].width; i++, z++)
-		{
-			for (j = 0, x = 0; j < levelDesigns[0].height; j++, x++)
-			{
-				GameObject tile = Instantiate(levelPrefabs[0], new Vector3(x, -5, z), Quaternion.identity);
-				tile.name = "Tile (" + z + ", " + x + ")";
-				tile.GetComponent<Renderer>().material.color = levelDesigns[0].GetPixel(i,j);
-			}
-		}
-		
-		//levelIndex = Mathf.Max(levelIndex, 0) % m_LevelsPrefabs.Length;
-		//m_CurrentLevelGO = Instantiate(m_LevelsPrefabs[levelIndex]);
-		//m_CurrentLevel = m_CurrentLevelGO.GetComponent<Level>();
+		currentLevelIndex = Mathf.Max(currentLevelIndex, 0) % levelsPrefabs.Length;
+		currentLevelGO = Instantiate(levelsPrefabs[currentLevelIndex]);
+		currentLevel = currentLevelGO.GetComponent<Level>();
 	}
 
 	private IEnumerator GoToNextLevelCoroutine()
 	{
-		Destroy(m_CurrentLevelGO);
-		while (m_CurrentLevelGO) yield return null;
+		Destroy(currentLevelGO);
+		while (currentLevelGO) yield return null;
 
-		GenerateLevel(m_CurrentLevelIndex);
+		InstantiateLevel();
 
-		EventManager.Instance.Raise(new LevelHasBeenInstantiatedEvent() { eLevel = m_CurrentLevel });
+		EventManager.Instance.Raise(new LevelHasBeenInstantiatedEvent() { eLevel = currentLevel });
 	}
 	#endregion
 
@@ -90,7 +76,7 @@ public class LevelsManager : Manager<LevelsManager> {
 
 	public void GoToNextLevel(GoToNextLevelEvent e)
 	{
-		m_CurrentLevelIndex++;
+		currentLevelIndex++;
 		StartCoroutine(GoToNextLevelCoroutine());
 	}
 	#endregion
