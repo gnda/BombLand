@@ -51,7 +51,6 @@ public class PlayerController : SimpleGameStateObserver, IEventHandler{
 		//bool fire = Input.GetAxis("Fire1") > 0;
 		////Debug.Log("Fire = " + fire);
 		//m_Gravity = fire ? m_LowGravity : m_HighGravity;
-
 	}
 
 	// Update is called once per frame
@@ -60,30 +59,34 @@ public class PlayerController : SimpleGameStateObserver, IEventHandler{
 
 		float hInput = Input.GetAxis("Horizontal");
 		float vInput = Input.GetAxis("Vertical");
-		bool jump = Input.GetAxis("Jump") > 0 || Input.GetKeyDown(KeyCode.Space);
-		bool fire = Input.GetAxis("Fire1") > 0;
-
+		//bool jump = Input.GetAxis("Jump") > 0 || Input.GetKeyDown(KeyCode.Space);
+		//bool fire = Input.GetAxis("Fire1") > 0;
+		
 		//m_Rigidbody.rotation = Quaternion.AngleAxis(90 * Mathf.Sign(hInput), Vector3.up);
 
-		m_Rigidbody.MovePosition(m_Rigidbody.position + m_Transform.forward * m_TranslationSpeed * hInput * Time.fixedDeltaTime);
+		m_Rigidbody.MovePosition(m_Rigidbody.position + vInput * m_TranslationSpeed * Time.fixedDeltaTime * transform.forward);
+		m_Rigidbody.MovePosition(m_Rigidbody.position + hInput * m_TranslationSpeed * Time.fixedDeltaTime * transform.right);
+		//m_Rigidbody.MovePosition(m_Rigidbody.position + m_Transform.forward * m_TranslationSpeed * hInput * Time.fixedDeltaTime);
 
+		/*
 		if (jump && m_IsGrounded)
 		{
 			Vector3 jumpForce = Vector3.up * m_JumpImpulsionMagnitude;
 			m_Rigidbody.AddForce(jumpForce, ForceMode.Impulse);
 		}
+		*/
 
-		if (m_IsGrounded)
+		/*if (m_IsGrounded)
 		{
 			m_Rigidbody.velocity = Vector3.zero;
-		}
+		}*/
 
-		m_Rigidbody.angularVelocity = Vector3.zero;
+		//m_Rigidbody.angularVelocity = Vector3.zero;
 
-		Vector3 gravity = m_HighGravity;
-		if (fire && m_Rigidbody.velocity.y < 0) gravity = m_LowGravity;
+		//Vector3 gravity = m_HighGravity;
+		//if (fire && m_Rigidbody.velocity.y < 0) gravity = m_LowGravity;
 
-		m_Rigidbody.AddForce(gravity*m_Rigidbody.mass);
+		//m_Rigidbody.AddForce(gravity*m_Rigidbody.mass);
 
 	}
 
