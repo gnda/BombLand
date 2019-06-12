@@ -12,6 +12,10 @@ public class Level : MonoBehaviour,IEventHandler {
 
     LevelState m_LevelState;
 
+    [SerializeField] private GameObject[] playerPrefabs;
+    [SerializeField] private GameObject[] enemyPrefabs;
+    
+    List<Player> players = new List<Player>();
     List<Enemy> m_Enemies = new List<Enemy>();
 
     [SerializeField] float m_WaitDurationBeforeLightFirstWick;
@@ -31,7 +35,8 @@ public class Level : MonoBehaviour,IEventHandler {
     private GameObject groundTiles;
 
     Vector3 RandomSpawnPos { get {
-            List<Vector3> spawnPositions = m_PowerCoinSpawnPoints.Select(item => item.position).Where(item=>!Physics.CheckSphere(item,m_PowerCoinPrefab.GetComponent<SphereCollider>().radius)).ToList();
+            List<Vector3> spawnPositions = m_PowerCoinSpawnPoints.Select(item => item.position)
+                .Where(item=>!Physics.CheckSphere(item,m_PowerCoinPrefab.GetComponent<SphereCollider>().radius)).ToList();
             spawnPositions.Sort((a, b) => Random.value.CompareTo(.5f));
 
             return spawnPositions[Random.Range(0, spawnPositions.Count)]; }
@@ -41,7 +46,7 @@ public class Level : MonoBehaviour,IEventHandler {
     {
         EventManager.Instance.AddListener<EnemyHasBeenDestroyedEvent>(EnemyHasBeenDestroyed);
         EventManager.Instance.AddListener<BombHasBeenDestroyedEvent>(BombHasBeenDestroyed);
-        EventManager.Instance.AddListener <PowerCoinHasBeenHitEvent>(PowerCoinHasBeenHit);
+        EventManager.Instance.AddListener<PowerCoinHasBeenHitEvent>(PowerCoinHasBeenHit);
     }
 
     public void UnsubscribeEvents()
@@ -64,9 +69,9 @@ public class Level : MonoBehaviour,IEventHandler {
     private void Start()
     {
         GenerateLevel();
-
+        
         //enemies
-        m_Enemies = GetComponentsInChildren<Enemy>().ToList();
+        //m_Enemies = GetComponentsInChildren<Enemy>().ToList();
 
         m_LevelState = LevelState.enemiesAreEnemies;
 
@@ -82,33 +87,39 @@ public class Level : MonoBehaviour,IEventHandler {
         tilesState = new bool[levelDesign.width, levelDesign.height];
         groundTiles = new GameObject("Ground Tiles");
         groundTiles.transform.SetParent(this.transform);
-
-        // Iterate through it's pixel
+        
+        //Iterate over the texture's pixels in order to generate the level
         for (i = 0, x = 0; i < levelDesign.width; i++, x++)
         {
             for (j = 0, z = 0; j < levelDesign.height; j++, z++)
             {
                 Color c = levelDesign.GetPixel(i, j);
-
+                GameObject tile = GenerateTile(x, 0, z, c);
+                tile.transform.SetParent(groundTiles.transform);
+                
                 if (c == Color.black)
                 {
-                    GameObject tile = GenerateTile(x, 0, z, c);
-                    tile.transform.SetParent(groundTiles.transform);
+
                 }
-                else if (c == Color.red) 
+                else if (c == Color.red)
                 {
-                    GameObject tile = GenerateTile(x, 0, z, c);
-                    tile.transform.SetParent(groundTiles.transform);
+                    GameObject enemy = Instantiate(enemyPrefabs[0],
+                        tile.transform.position + new Vector3(0,5,0),
+                        Quaternion.identity);
+                    enemy.transform.SetParent(this.transform);
+                    m_Enemies.Add(enemy.GetComponent<Enemy>());
                 }
                 else if (c == Color.green)
                 {
-                    GameObject tile = GenerateTile(x, 0, z, c);
-                    tile.transform.SetParent(groundTiles.transform);
+                    GameObject player = Instantiate(playerPrefabs[0],
+                        tile.transform.position + new Vector3(0,5,0),
+                        Quaternion.identity);
+                    player.transform.SetParent(this.transform);
+                    players.Add(player.GetComponent<Player>());
                 }
                 else if (c == Color.white)
                 {
-                    GameObject tile = GenerateTile(x, 0, z, c);
-                    tile.transform.SetParent(groundTiles.transform);
+
                 }
             }
         }
@@ -147,7 +158,7 @@ public class Level : MonoBehaviour,IEventHandler {
         m_LevelState = LevelState.enemiesAreCoins;
         foreach (var item in m_Enemies)
         {
-            item.BeACoin(m_EnemiesBecomeCoinDuration);
+            item.GetComponent<Enemy>().BeACoin(m_EnemiesBecomeCoinDuration);
         }
 
         yield return new WaitForSeconds(duration);

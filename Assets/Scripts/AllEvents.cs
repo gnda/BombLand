@@ -106,6 +106,7 @@ public class PlayerHasBeenHitEvent:SDD.Events.Event
 {
 }
 #endregion
+
 #region PowerCoin
 public class PowerCoinHasBeenHitEvent : SDD.Events.Event
 {

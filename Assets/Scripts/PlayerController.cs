@@ -4,11 +4,7 @@ using UnityEngine;
 using SDD.Events;
 
 public class PlayerController : SimpleGameStateObserver, IEventHandler{
-
-	[Header("Spawn")]
-	[SerializeField]
-	private Transform m_SpawnPoint;
-
+	
 	#region Physics gravity
 	[SerializeField] Vector3 m_LowGravity;
 	[SerializeField] Vector3 m_HighGravity;
@@ -25,6 +21,7 @@ public class PlayerController : SimpleGameStateObserver, IEventHandler{
 	private float m_JumpImpulsionMagnitude;
 
 	private bool m_IsGrounded;
+	private bool isMoving;
 
 	protected override void Awake()
 	{
@@ -35,7 +32,7 @@ public class PlayerController : SimpleGameStateObserver, IEventHandler{
 
 	private void Reset()
 	{
-		m_Rigidbody.position = m_SpawnPoint.position;
+		//m_Rigidbody.position = m_SpawnPoint.position;
 		m_Rigidbody.velocity = Vector3.zero;
 		m_Rigidbody.angularVelocity = Vector3.zero;
 	}
@@ -57,16 +54,16 @@ public class PlayerController : SimpleGameStateObserver, IEventHandler{
 	void FixedUpdate () {
 		if (GameManager.Instance && !GameManager.Instance.IsPlaying) return;
 
-		float hInput = Input.GetAxis("Horizontal");
-		float vInput = Input.GetAxis("Vertical");
+
 		//bool jump = Input.GetAxis("Jump") > 0 || Input.GetKeyDown(KeyCode.Space);
 		//bool fire = Input.GetAxis("Fire1") > 0;
 		
 		//m_Rigidbody.rotation = Quaternion.AngleAxis(90 * Mathf.Sign(hInput), Vector3.up);
 
-		m_Rigidbody.MovePosition(m_Rigidbody.position + vInput * m_TranslationSpeed * Time.fixedDeltaTime * transform.forward);
-		m_Rigidbody.MovePosition(m_Rigidbody.position + hInput * m_TranslationSpeed * Time.fixedDeltaTime * transform.right);
-		//m_Rigidbody.MovePosition(m_Rigidbody.position + m_Transform.forward * m_TranslationSpeed * hInput * Time.fixedDeltaTime);
+		//m_Rigidbody.MovePosition(m_Rigidbody.position + vInput * m_TranslationSpeed * Time.fixedDeltaTime * transform.forward);
+		//m_Rigidbody.MovePosition(m_Rigidbody.position + hInput * 10f * 0.1f * transform.right);
+
+		if (!isMoving) StartCoroutine(MoveCoroutine());
 
 		/*
 		if (jump && m_IsGrounded)
@@ -88,6 +85,25 @@ public class PlayerController : SimpleGameStateObserver, IEventHandler{
 
 		//m_Rigidbody.AddForce(gravity*m_Rigidbody.mass);
 
+	}
+
+	private IEnumerator MoveCoroutine()
+	{
+		float hInput = Input.GetAxis("Horizontal");
+		float vInput = Input.GetAxis("Vertical");
+
+		isMoving = true;
+		
+		//m_Rigidbody.MovePosition(m_Rigidbody.position + hInput * m_TranslationSpeed * Time.fixedDeltaTime * transform.right);
+		if (hInput != 0)
+		{
+			float currentDuration = (Time.time - startTime) * speed;
+			float journeyFraction = currentDuration / totalDistance;
+			transform.position = Vector3.Lerp(transform.position,  new Vector3(hInput + transform.position.x, 0, 0), Time.fixedDeltaTime);
+		}
+		
+		//yield return new WaitForSeconds(2);
+		yield return isMoving = false;
 	}
 
 	private void OnCollisionEnter(Collision collision)
