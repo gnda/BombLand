@@ -46,7 +46,7 @@ MonoBehaviour:
   playerPrefabs:
   - {fileID: 8403109495700023078, guid: a05106dffe1135d88a49c01faad5caa6, type: 3}
   enemyPrefabs:
-  - {fileID: 1812984978241422, guid: 93290f45a01ac3c42a0c73128ab2dd9e, type: 3}
+  - {fileID: 7291343781405201290, guid: 14ef91ba26fa6100bbdeb424f76b0fb5, type: 3}
   m_WaitDurationBeforeLightFirstWick: 0
   m_NBombPointsToBeCollectedForPowerCoin: 0
   m_PowerCoinPrefab: {fileID: 0}
@@ -54,4 +54,8 @@ MonoBehaviour:
   m_EnemiesBecomeCoinDuration: 0
   levelDesign: {fileID: 2800000, guid: 7c7e70a8d3c38f3f79009118c879434c, type: 3}
   groundTilePrefab: {fileID: 1098925979027782, guid: b94ba9115cbf341fd99ba437f4d77015,
+    type: 3}
+  wallPrefab: {fileID: 4145590106752234625, guid: fab1336843e0028b5b2bfc60f574f8e3,
+    type: 3}
+  destroyableWallPrefab: {fileID: 3694109896854485447, guid: 2bed8b8a3630afc7bb1d542c82a9c739,
     type: 3}

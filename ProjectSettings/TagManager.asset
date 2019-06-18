@@ -11,7 +11,7 @@ TagManager:
   - Ground
   - Limit
   - Platform
-  - PowerCoin
+  - Bomb
   layers:
   - Default
   - TransparentFX

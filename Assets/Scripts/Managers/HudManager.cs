@@ -5,9 +5,11 @@ using UnityEngine;
 using UnityEngine.UI;
 using SDD.Events;
 
-public class HudManager : Manager<HudManager> {
+public class HudManager : Manager<HudManager>
+{
 
 	[Header("HudManager")]
+	[SerializeField] private GameObject m_PanelHUD;
 	#region Labels & Values
 	[Header("Texts")]
 	[SerializeField] private Text m_TxtBestScore;
@@ -20,6 +22,7 @@ public class HudManager : Manager<HudManager> {
 	#region Manager implementation
 	protected override IEnumerator InitCoroutine()
 	{
+		m_PanelHUD.SetActive(false);
 		yield break;
 	}
 	#endregion
@@ -31,6 +34,7 @@ public class HudManager : Manager<HudManager> {
 
 		//level
 		EventManager.Instance.AddListener<BombPointsForPowerCoinsChangedEvent>(BombPointsForPowerCoinsChanged);
+		EventManager.Instance.AddListener<GoToNextLevelEvent>(GoToNextLevel);
 		
 	}
 	public override void UnsubscribeEvents()
@@ -39,6 +43,7 @@ public class HudManager : Manager<HudManager> {
 
 		//level
 		EventManager.Instance.RemoveListener<BombPointsForPowerCoinsChangedEvent>(BombPointsForPowerCoinsChanged);
+		EventManager.Instance.RemoveListener<GoToNextLevelEvent>(GoToNextLevel);
 
 	}
 	#endregion
@@ -47,6 +52,11 @@ public class HudManager : Manager<HudManager> {
 	private void BombPointsForPowerCoinsChanged(BombPointsForPowerCoinsChangedEvent e)
 	{
 		m_TxtNPointsGainedForPowerCoin.text = e.ePoints.ToString("N01");
+	}
+	
+	private void GoToNextLevel(GoToNextLevelEvent e)
+	{
+		m_PanelHUD.SetActive(true);
 	}
 	#endregion
 

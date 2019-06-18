@@ -5,16 +5,16 @@ using UnityEngine;
 using SDD.Events;
 using System.Linq;
 
-public enum GameState { gameMenu, gamePlay,gameNextLevel,gamePause,gameOver,gameVictory}
+public enum GameState {gameMenu, gamePlay,gameNextLevel,gamePause,gameOver,gameVictory, gameCredits}
 
 public class GameManager : Manager<GameManager> {
-
-
+	
 	#region Time
 	void SetTimeScale(float newTimeScale)
 	{
 		Time.timeScale = newTimeScale;
 	}
+
 	#endregion
 
 	#region Game State
@@ -111,6 +111,21 @@ public class GameManager : Manager<GameManager> {
 		}
 	}
 	#endregion
+	
+	#region Level
+	
+	public Level Level
+	{
+		get { return GameObject.FindObjectsOfType<Level>()[0]; }
+	}
+	#endregion
+	
+	#region Camera
+	public Camera Camera
+	{
+		get { return GameObject.FindObjectsOfType<Camera>()[0]; }
+	}
+	#endregion
 
 	#region Events' subscription
 	public override void SubscribeEvents()
@@ -123,12 +138,15 @@ public class GameManager : Manager<GameManager> {
 		EventManager.Instance.AddListener<NextLevelButtonClickedEvent>(NextLevelButtonClicked);
 		EventManager.Instance.AddListener<ResumeButtonClickedEvent>(ResumeButtonClicked);
 		EventManager.Instance.AddListener<EscapeButtonClickedEvent>(EscapeButtonClicked);
+		
+		
+		EventManager.Instance.AddListener<CreditsButtonClickedEvent>(CreditsButtonClicked);
 
 		//Enemy
 		EventManager.Instance.AddListener<EnemyHasBeenDestroyedEvent>(EnemyHasBeenDestroyed);
 
 		//Bomb
-		EventManager.Instance.AddListener<BombHasBeenDestroyedEvent>(BombHasBeenDestroyed);
+		EventManager.Instance.AddListener<BombIsDestroyingEvent>(BombIsDestroying);
 
 		//Score Item
 		EventManager.Instance.AddListener<ScoreItemEvent>(ScoreHasBeenGained);
@@ -157,7 +175,7 @@ public class GameManager : Manager<GameManager> {
 		EventManager.Instance.RemoveListener<EnemyHasBeenDestroyedEvent>(EnemyHasBeenDestroyed);
 
 		//Bomb
-		EventManager.Instance.RemoveListener<BombHasBeenDestroyedEvent>(BombHasBeenDestroyed);
+		EventManager.Instance.RemoveListener<BombIsDestroyingEvent>(BombIsDestroying);
 
 		//Score Item
 		EventManager.Instance.RemoveListener<ScoreItemEvent>(ScoreHasBeenGained);
@@ -217,14 +235,14 @@ public class GameManager : Manager<GameManager> {
 	#endregion
 
 	#region Callbacks to events issued by Bomb items
-	private void BombHasBeenDestroyed(BombHasBeenDestroyedEvent e)
+	private void BombIsDestroying(BombIsDestroyingEvent e)
 	{
-		DecrementNEnemiesLeftBeforeVictory(1);
+		/*DecrementNEnemiesLeftBeforeVictory(1);
 
 		if (m_NEnemiesLeftBeforeVictory == 0)
 		{
 			Victory();
-		}
+		}*/
 	}
 
 	private void AllBombsHaveBeenDestroyed(AllBombsHaveBeenDestroyedEvent e)
@@ -284,6 +302,11 @@ public class GameManager : Manager<GameManager> {
 		if(IsPlaying)
 			Pause();
 	}
+	
+	private void CreditsButtonClicked(CreditsButtonClickedEvent e)
+	{
+		Credits();
+	}
 	#endregion
 
 	#region GameState methods
@@ -331,6 +354,13 @@ public class GameManager : Manager<GameManager> {
 		m_GameState = GameState.gameVictory;
 		SfxManager.Instance.PlaySfx(Constants.VICTORY_SFX);
 		EventManager.Instance.Raise(new GameVictoryEvent());
+	}
+	
+	private void Credits()
+	{
+		SetTimeScale(1);
+		m_GameState = GameState.gameCredits;
+		EventManager.Instance.Raise(new GameCreditsEvent());
 	}
 	#endregion
 }

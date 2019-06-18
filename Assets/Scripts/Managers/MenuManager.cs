@@ -15,6 +15,7 @@ public class MenuManager : Manager<MenuManager> {
 	[SerializeField] GameObject m_PanelNextLevel;
 	[SerializeField] GameObject m_PanelVictory;
 	[SerializeField] GameObject m_PanelGameOver;
+	[SerializeField] GameObject m_PanelCredits;
 
 	List<GameObject> m_AllPanels;
 	#endregion
@@ -46,6 +47,19 @@ public class MenuManager : Manager<MenuManager> {
 	}
 	#endregion
 
+	private IEnumerator GoBackToMainMenuCoroutine(float time)
+	{
+		float elapsedTime = 0;
+
+		while (elapsedTime < time)
+		{
+			elapsedTime += Time.deltaTime;
+			yield return null;
+		}
+		
+		EventManager.Instance.Raise(new GameMenuEvent());
+	}
+
 	#region Monobehaviour lifecycle
 	protected override void Awake()
 	{
@@ -71,6 +85,7 @@ public class MenuManager : Manager<MenuManager> {
 		m_AllPanels.Add(m_PanelNextLevel);
 		m_AllPanels.Add(m_PanelVictory);
 		m_AllPanels.Add(m_PanelGameOver);
+		m_AllPanels.Add(m_PanelCredits);
 	}
 
 	void OpenPanel(GameObject panel)
@@ -104,6 +119,11 @@ public class MenuManager : Manager<MenuManager> {
 	public void NextLevelButtonHasBeenClicked()
 	{
 		EventManager.Instance.Raise(new NextLevelButtonClickedEvent());
+	}
+	
+	public void CreditsButtonHasBeenClicked()
+	{
+		EventManager.Instance.Raise(new CreditsButtonClickedEvent());
 	}
 	#endregion
 
@@ -146,6 +166,12 @@ public class MenuManager : Manager<MenuManager> {
 	protected override void GameVictory(GameVictoryEvent e)
 	{
 		OpenPanel(m_PanelVictory);
+	}
+	
+	protected override void GameCredits(GameCreditsEvent e)
+	{
+		OpenPanel(m_PanelCredits);
+		StartCoroutine(GoBackToMainMenuCoroutine(14));
 	}
 	#endregion
 }

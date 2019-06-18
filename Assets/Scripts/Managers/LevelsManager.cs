@@ -15,6 +15,10 @@ public class LevelsManager : Manager<LevelsManager> {
 
 	[SerializeField] private GameObject[] levelsPrefabs;
 
+	protected override void Awake()
+	{
+		base.Awake();
+	} 
 	#endregion
 
 	#region Manager implementation
@@ -60,7 +64,7 @@ public class LevelsManager : Manager<LevelsManager> {
 
 		InstantiateLevel();
 
-		EventManager.Instance.Raise(new LevelHasBeenInstantiatedEvent() { eLevel = currentLevel });
+		
 	}
 	#endregion
 

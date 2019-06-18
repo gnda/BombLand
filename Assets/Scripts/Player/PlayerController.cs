@@ -1,53 +1,37 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Common;
+using DefaultNamespace;
+using JetBrains.Annotations;
 using UnityEngine;
 using SDD.Events;
+using Event = SDD.Events.Event;
 
-public class PlayerController : SimpleGameStateObserver, IEventHandler{
+public class PlayerController : SimpleGameStateObserver, IEventHandler, IMoveable{
 	
-	#region Physics gravity
-	[SerializeField] Vector3 m_LowGravity;
-	[SerializeField] Vector3 m_HighGravity;
-	//Vector3 m_Gravity;
-	#endregion
+	public Transform Transf { get; set; }
+	
+	[SerializeField] private GameObject bombPrefab;
+	[SerializeField] private float dropCoolDownDuration;
 
-
-	private Rigidbody m_Rigidbody;
-	private Transform m_Transform;
-
-	[SerializeField]
-	private float m_TranslationSpeed;
-	[SerializeField]
-	private float m_JumpImpulsionMagnitude;
-
-	private bool m_IsGrounded;
-	private bool isMoving;
+	public bool IsMoving { get; set; }
+	public char Symbol { get; set; }
+	
+	
+	char[,] tilesState;
+	
+	float nextDropTime;
 
 	protected override void Awake()
 	{
 		base.Awake();
-		m_Rigidbody = GetComponent<Rigidbody>();
-		m_Transform = GetComponent<Transform>();
-	}
-
-	private void Reset()
-	{
-		//m_Rigidbody.position = m_SpawnPoint.position;
-		m_Rigidbody.velocity = Vector3.zero;
-		m_Rigidbody.angularVelocity = Vector3.zero;
+		Transf = GetComponent<Transform>();
 	}
 
 	// Use this for initialization
 	void Start () {
-		m_IsGrounded = false;
-		//m_Gravity = m_HighGravity;
-	}
-
-	private void Update()
-	{
-		//bool fire = Input.GetAxis("Fire1") > 0;
-		////Debug.Log("Fire = " + fire);
-		//m_Gravity = fire ? m_LowGravity : m_HighGravity;
+		tilesState = GameManager.Instance.Level.TilesState;
+		nextDropTime = Time.time;
 	}
 
 	// Update is called once per frame
@@ -63,7 +47,63 @@ public class PlayerController : SimpleGameStateObserver, IEventHandler{
 		//m_Rigidbody.MovePosition(m_Rigidbody.position + vInput * m_TranslationSpeed * Time.fixedDeltaTime * transform.forward);
 		//m_Rigidbody.MovePosition(m_Rigidbody.position + hInput * 10f * 0.1f * transform.right);
 
-		if (!isMoving) StartCoroutine(MoveCoroutine());
+		float hInput = Input.GetAxis("Horizontal");
+		float vInput = Input.GetAxis("Vertical");
+		/*if (!isMoving && hInput != 0)
+		{
+			float i = 0.0f;
+			float rate = 1.0f/Time.time;
+			while (i < 1.0f) {
+				i += Time.time * rate;
+				Debug.Log(i);
+				transform.position = Vector3.Lerp(transform.position, endPos, 0.1f);
+			}
+		}*/
+		//if(hInput != 0) transform.position = Vector3.Lerp(transform.position, transform.position + Vector3.right, 1f);
+
+		//increment timer once per frame
+
+		if (hInput != 0f)
+		{
+			EventManager.Instance.Raise(new MoveElementEvent()
+			{
+				eMoveable = this,
+				eDirection = Mathf.Sign(hInput) * Vector3.right
+			});
+		} 
+		else if (vInput != 0f)
+		{
+			EventManager.Instance.Raise(new MoveElementEvent()
+			{
+				eMoveable = this,
+				eDirection = Mathf.Sign(vInput) * Vector3.forward
+			});
+		}
+		
+		if (Input.GetButtonDown("Jump") && Time.time > nextDropTime)
+		{
+			GameObject bombGO = Instantiate(bombPrefab);
+			bombGO.GetComponent<Bomb>().Player = GetComponent<Player>();
+			bombGO.transform.position = 
+				new Vector3((int)Transf.position.x, 0.5f, (int)Transf.position.z);
+
+			nextDropTime = Time.time + dropCoolDownDuration;
+		}
+		
+		/*if (hInput != 0 && !isMoving)
+		{
+			Vector3 direction = hInput > 0 ? Vector3.right : Vector3.left;
+
+			//StopCoroutine(translationCoroutine);
+			translationCoroutine = StartCoroutine(TranslationCoroutine(0.5f, transform, 
+					transform.position, transform.position + direction, EasingFunction.EaseOutCubic));
+		} else if (vInput != 0 && !isMoving)
+		{
+			Vector3 direction = vInput > 0 ? Vector3.forward : Vector3.back;
+			
+			translationCoroutine = StartCoroutine(TranslationCoroutine(0.5f, transform, 
+				transform.position, transform.position + direction, EasingFunction.EaseOutCubic));
+		}*/
 
 		/*
 		if (jump && m_IsGrounded)
@@ -87,46 +127,58 @@ public class PlayerController : SimpleGameStateObserver, IEventHandler{
 
 	}
 
-	private IEnumerator MoveCoroutine()
+	/*private IEnumerator TranslationCoroutine(float duration, Transform transf, Vector3 startPos, 
+		Vector3 endPos, [CanBeNull] EasingFunctionDelegate easingFunction)
 	{
-		float hInput = Input.GetAxis("Horizontal");
-		float vInput = Input.GetAxis("Vertical");
+		float elapsedTime = 0;
 
 		isMoving = true;
 		
-		//m_Rigidbody.MovePosition(m_Rigidbody.position + hInput * m_TranslationSpeed * Time.fixedDeltaTime * transform.right);
-		if (hInput != 0)
-		{
-			float currentDuration = (Time.time - startTime) * speed;
-			float journeyFraction = currentDuration / totalDistance;
-			transform.position = Vector3.Lerp(transform.position,  new Vector3(hInput + transform.position.x, 0, 0), Time.fixedDeltaTime);
-		}
 		
-		//yield return new WaitForSeconds(2);
-		yield return isMoving = false;
-	}
-
-	private void OnCollisionEnter(Collision collision)
-	{
-		if (collision.gameObject.CompareTag("Ground")
-			|| collision.gameObject.CompareTag("Platform"))
+		while (elapsedTime < duration)
 		{
-			Vector3 colLocalPt = m_Transform.InverseTransformPoint(collision.contacts[0].point);
+			float elapsedTimePerc = elapsedTime / duration;
+			transf.position = Vector3.Lerp(startPos, endPos, 
+				easingFunction != null ? 
+					easingFunction(0,1,elapsedTimePerc) : elapsedTimePerc);
+
+			elapsedTime += Time.deltaTime;
+			yield return null;
+		}
+
+		transf.position = endPos;
+
+		tilesState[(int) startPos.x, (int) startPos.z] = '.';
+		tilesState[(int) endPos.x, (int) endPos.z] = GetComponent<Player>().numPlayer.ToString()[0];
+		
+		yield return isMoving = false;
+	}*/
+
+	/*private void OnCollisionEnter(Collision collision)
+	{
+		if (collision.gameObject.CompareTag("Ground"))
+		{
+			//Vector3 colLocalPt = m_Transform.InverseTransformPoint(collision.contacts[0].point);
 
 			//Debug.LogError(Time.frameCount+" colLocalPt = " + colLocalPt+ "   colLocalPt.magnitude = "+ colLocalPt.magnitude);
 
 			if (colLocalPt.magnitude<.5f)
 				m_IsGrounded = true;
-		}
+			//StopCoroutine(translationCoroutine);
+			//m_Rigidbody.velocity = 0;
+		} 
+		else if (collision.gameObject.CompareTag("Platform"))
+		{
 
-	}
+		}
+	}*/
 
 	private void OnCollisionExit(Collision collision)
 	{
 		if (collision.gameObject.CompareTag("Ground")
 			|| collision.gameObject.CompareTag("Platform"))
 		{
-			m_IsGrounded = false;
+			//m_IsGrounded = false;
 		}
 	}
 
@@ -135,15 +187,15 @@ public class PlayerController : SimpleGameStateObserver, IEventHandler{
 		if(GameManager.Instance.IsPlaying
 			&& other.gameObject.CompareTag("Enemy"))
 		{
-			if(other.GetComponent<Enemy>().IsEnemy)
-				EventManager.Instance.Raise(new PlayerHasBeenHitEvent());
+			if(other.GetComponent<Enemy>())
+				EventManager.Instance.Raise(new PlayerHasBeenHitEvent()
+					{ eEnemy = GetComponent<Enemy>() });
 		}
-	}
-
-	//Game state events
-	protected override void GameMenu(GameMenuEvent e)
-	{
-		Reset();
+		if (other.gameObject.CompareTag("Ground"))
+		{
+			/*EventManager.Instance.Raise(new PlayerHasMovedEvent()
+			{ ePlayer = GetComponent<Player>() });*/
+		}
 	}
 }
 

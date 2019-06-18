@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using DefaultNamespace;
 using UnityEngine;
 using SDD.Events;
 
@@ -17,6 +18,9 @@ public class GameResumeEvent : SDD.Events.Event
 {
 }
 public class GameOverEvent : SDD.Events.Event
+{
+}
+public class GameCreditsEvent : SDD.Events.Event
 {
 }
 public class GameVictoryEvent : SDD.Events.Event
@@ -47,6 +51,10 @@ public class MainMenuButtonClickedEvent : SDD.Events.Event
 public class NextLevelButtonClickedEvent : SDD.Events.Event
 {
 }
+
+public class CreditsButtonClickedEvent : SDD.Events.Event
+{
+}
 #endregion
 
 #region Enemy Event
@@ -58,10 +66,9 @@ public class EnemyHasBeenDestroyedEvent : SDD.Events.Event
 #endregion
 
 #region Bomb Events
-class BombHasBeenDestroyedEvent: SDD.Events.Event
+class BombIsDestroyingEvent: SDD.Events.Event
 {
 	public Bomb eBomb;
-	public bool eDestroyedByPlayer;
 }
 class AllBombsHaveBeenDestroyedEvent : SDD.Events.Event
 {
@@ -81,6 +88,14 @@ public class AskToGoToNextLevelEvent : SDD.Events.Event
 }
 public class GoToNextLevelEvent : SDD.Events.Event
 {
+}
+#endregion
+
+#region Movement Manager Event
+public class MoveElementEvent : SDD.Events.Event
+{
+	public IMoveable eMoveable;
+	public Vector3 eDirection;
 }
 #endregion
 
@@ -104,8 +119,14 @@ public class LevelHasBeenInstantiatedEvent : SDD.Events.Event
 #region Player
 public class PlayerHasBeenHitEvent:SDD.Events.Event
 {
+	public Enemy eEnemy;
 }
 #endregion
+
+/*public class PlayerHasMovedEvent : SDD.Events.Event
+{
+	public Player ePlayer;
+}*/
 
 #region PowerCoin
 public class PowerCoinHasBeenHitEvent : SDD.Events.Event

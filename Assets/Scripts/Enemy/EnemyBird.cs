@@ -5,7 +5,6 @@ using UnityEngine;
 using Random = UnityEngine.Random;
 using System.Linq;
 
-[RequireComponent(typeof(SphereCollider))]
 public class EnemyBird : Enemy {
 
 	enum Phase { wait,move};
@@ -19,28 +18,48 @@ public class EnemyBird : Enemy {
 	float m_Time;
 
 	Transform m_Player;
-	SphereCollider m_SphCollider;
+	char[,] tilesState;
+	
+	public BoxCollider m_BoxCollider { get; set; }
 
 	private Vector3 NextDirection
 	{
 		get {
-			List<Vector3> directions = new List<Vector3>() { Vector3.right,Vector3.up,-Vector3.right,-Vector3.up};
+			List<Vector3> directions = new List<Vector3>() { Vector3.right/*,Vector3.forward,-Vector3.right,-Vector3.forward*/};
+			
 			for (int i = directions.Count-1; i >=0; i--)
 			{
-				List<RaycastHit> hits = Physics.SphereCastAll(m_Transform.position,m_SphCollider.radius, directions[i], m_MoveDuration*m_TranslationSpeed).Where(item=>item.transform.CompareTag("Platform")|| item.transform.CompareTag("Limit")||item.transform.CompareTag("Ground")).ToList();
+				/*List<RaycastHit> hits = Physics.BoxCastAll(Transf.position,)
+					
+					
+					Physics.SphereCastAll(Transf.position,m_BoxCollider.radius, directions[i], 
+					m_MoveDuration*m_TranslationSpeed).Where(
+					item => item.transform.CompareTag("Platform")|| 
+					        item.transform.CompareTag("Limit")||
+					        item.transform.CompareTag("Ground")).ToList();
 				if (hits.Count > 0)
 				{
-//					hits.Sort((a, b) => Vector3.Distance(a.point, m_Transform.position).CompareTo(Vector3.Distance(b.point, m_Transform.position)));
+					hits.Sort((a, b) => Vector3.Distance(a.point, Transf.position)
+						.CompareTo(Vector3.Distance(b.point, Transf.position)));
 //					if (Vector3.Distance(hits[0].point, m_Transform.position) < m_MoveDuration * m_TranslationSpeed + m_SphCollider.radius + .1f)
-						directions.RemoveAt(i);
-				}
+					foreach (RaycastHit h in hits)
+					{
+						Debug.Log(h.transform.position);
+						Debug.DrawLine(Transf.position, h.transform.position, Color.red, 100f);
+					}
+					directions.RemoveAt(i);
+				}*/
 			}
 
+			Debug.Log("END");
 			if (directions.Count == 0) return Vector3.zero;
 
 			// on choisit la direction qui nous rapproche le plus du player
-			directions.Sort((a, b) => Vector3.Distance(m_Transform.position + a * m_MoveDuration * m_TranslationSpeed, m_Player.position).CompareTo(Vector3.Distance(m_Transform.position + b * m_MoveDuration * m_TranslationSpeed, m_Player.position)));
-
+			directions.Sort((a, b) => Vector3.Distance(
+					Transf.position + m_MoveDuration * m_TranslationSpeed * a, m_Player.position)
+				.CompareTo(Vector3.Distance(Transf.position + b * m_MoveDuration * m_TranslationSpeed, 
+					m_Player.position)));
+			
 			return directions[0];
 		}
 	}
@@ -48,18 +67,20 @@ public class EnemyBird : Enemy {
 	protected override void Awake()
 	{
 		base.Awake();
-		m_SphCollider = GetComponent<SphereCollider>();
+		//m_SphCollider = GetComponent<SphereCollider>();
+		//m_SphCollider = GetComponent<SphereCollider>();
 	}
+
 	protected override void Start()
 	{
 		base.Start();
 		m_Player = GameManager.Instance.PlayerTransforms[0];
+		tilesState = GameManager.Instance.Level.TilesState;
 
 		m_Phase = Phase.wait;
 		m_TimeNextPhase = m_WaitDuration;
 		m_Time = 0;
 		m_TranslationDir = NextDirection;
-
 	}
 
 	protected override Vector3 MoveVect
@@ -86,7 +107,7 @@ public class EnemyBird : Enemy {
 			}
 
 			if (m_Phase == Phase.move)
-				return m_TranslationDir * m_TranslationSpeed * Time.fixedDeltaTime;
+				return m_TranslationSpeed * Time.fixedDeltaTime * m_TranslationDir;
 			else return Vector3.zero;
 		}
 	}

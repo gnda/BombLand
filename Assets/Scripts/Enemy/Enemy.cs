@@ -2,17 +2,26 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using DefaultNamespace;
 using UnityEngine;
 
 using Random = UnityEngine.Random;
 
-public abstract class Enemy : SimpleGameStateObserver,IScore {
+public abstract class Enemy : SimpleGameStateObserver,IScore,IMoveable {
 
 	enum State { none, enemy,coin }
 	State m_State;
+	
+	public bool IsMoving { get; set; }
+	public char Symbol { get; set; }
+	public Transform Transf { get; set; }
 
 	public bool IsEnemy { get { return m_State == State.enemy; } }
-	public bool IsCoin { get { return m_State == State.coin; } }
+
+	public bool IsCoin
+	{
+		get { return m_State == State.coin; }
+	}
 
 	IEnumerator BeACoinCoroutine(float duration)
 	{
@@ -25,22 +34,19 @@ public abstract class Enemy : SimpleGameStateObserver,IScore {
 		StartCoroutine(BeACoinCoroutine(duration));
 	}
 
-	protected Rigidbody m_Rigidbody;
-	protected Transform m_Transform;
-
 	[Header("Movement")]
 	[SerializeField] private float m_MaxTranslationSpeed;
 	[SerializeField] private float m_MinTranslationSpeed;
 	[SerializeField] private AnimationCurve m_TranslationSpeedProbaCurve;
 	protected float m_TranslationSpeed;
 	public float TranslationSpeed { get { return m_TranslationSpeed; } }
+	
+	char[,] tilesState;
 
 	protected abstract Vector3 MoveVect { get; }
 
 	//Enemy Gfx 
 	[SerializeField] Transform m_EnemyGfx;
-	//Coin Gfx
-	[SerializeField] Transform m_CoinGfx;
 
 
 	[Header("Score")]
@@ -52,11 +58,11 @@ public abstract class Enemy : SimpleGameStateObserver,IScore {
 	protected override void Awake()
 	{
 		base.Awake();
+		
+		Transf = GetComponent<Transform>();
 
-		m_Rigidbody = GetComponent<Rigidbody>();
-		m_Transform = GetComponent<Transform>();
-
-		m_TranslationSpeed = Mathf.Lerp(m_MinTranslationSpeed, m_MaxTranslationSpeed, m_TranslationSpeedProbaCurve.Evaluate(Random.value));
+		m_TranslationSpeed = Mathf.Lerp(m_MinTranslationSpeed, m_MaxTranslationSpeed, 
+			m_TranslationSpeedProbaCurve.Evaluate(Random.value));
 	}
 
 	protected virtual void Start()
@@ -67,7 +73,6 @@ public abstract class Enemy : SimpleGameStateObserver,IScore {
 	private void Update()
 	{
 		m_EnemyGfx.gameObject.SetActive(m_State == State.enemy);
-		m_CoinGfx.gameObject.SetActive(m_State == State.coin);
 	}
 
 	public virtual void FixedUpdate()
@@ -75,12 +80,12 @@ public abstract class Enemy : SimpleGameStateObserver,IScore {
 		if (!GameManager.Instance.IsPlaying) return;
 
 		if(IsEnemy)
-			m_Rigidbody.MovePosition(m_Rigidbody.position + MoveVect);
+			Transf.position = Transf.position + MoveVect;
 	}
 
 	private void OnTriggerEnter(Collider col)
 	{
-		Debug.Log( name+" Collision with " + col.gameObject.name);
+		//Debug.Log( name+" Collision with " + col.gameObject.name);
 		//Debug.Break();
 		if(GameManager.Instance.IsPlaying
 			&& col.gameObject.CompareTag("Player"))
