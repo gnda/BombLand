@@ -134,13 +134,29 @@ public class GameManager : Manager<GameManager> {
 
 		//MainMenuManager
 		EventManager.Instance.AddListener<MainMenuButtonClickedEvent>(MainMenuButtonClicked);
-		EventManager.Instance.AddListener<PlayButtonClickedEvent>(PlayButtonClicked);
 		EventManager.Instance.AddListener<NextLevelButtonClickedEvent>(NextLevelButtonClicked);
 		EventManager.Instance.AddListener<ResumeButtonClickedEvent>(ResumeButtonClicked);
 		EventManager.Instance.AddListener<EscapeButtonClickedEvent>(EscapeButtonClicked);
-		
-		
 		EventManager.Instance.AddListener<CreditsButtonClickedEvent>(CreditsButtonClicked);
+		
+		//Game Type Choice
+		EventManager.Instance.AddListener<LocalButtonClickedEvent>(LocalButtonClicked);
+		EventManager.Instance.AddListener<MultiplayerButtonClickedEvent>(MultiplayerButtonClicked);
+		
+		//Player Type Choice
+		EventManager.Instance.AddListener<VsHumanButtonClickedEvent>(VsHumanButtonClicked);
+		EventManager.Instance.AddListener<VsCpuButtonClickedEvent>(VsCpuButtonClicked);
+		
+		//Number of player selection
+		EventManager.Instance.AddListener<OnePlayerButtonClickedEvent>(OnePlayerButtonClicked);
+		EventManager.Instance.AddListener<TwoPlayerButtonClickedEvent>(TwoPlayerButtonClicked);
+		EventManager.Instance.AddListener<ThreePlayerButtonClickedEvent>(ThreePlayerButtonClicked);
+		EventManager.Instance.AddListener<FourPlayerButtonClickedEvent>(FourPlayerButtonClicked);
+		
+		//Level Select
+		EventManager.Instance.AddListener<LevelOneButtonClickedEvent>(LevelOneButtonClicked);
+		EventManager.Instance.AddListener<LevelTwoButtonClickedEvent>(LevelTwoButtonClicked);
+		EventManager.Instance.AddListener<LevelThreeButtonClickedEvent>(LevelThreeButtonClicked);
 
 		//Enemy
 		EventManager.Instance.AddListener<EnemyHasBeenDestroyedEvent>(EnemyHasBeenDestroyed);
@@ -166,10 +182,28 @@ public class GameManager : Manager<GameManager> {
 
 		//MainMenuManager
 		EventManager.Instance.RemoveListener<MainMenuButtonClickedEvent>(MainMenuButtonClicked);
-		EventManager.Instance.RemoveListener<PlayButtonClickedEvent>(PlayButtonClicked);
 		EventManager.Instance.RemoveListener<NextLevelButtonClickedEvent>(NextLevelButtonClicked);
 		EventManager.Instance.RemoveListener<ResumeButtonClickedEvent>(ResumeButtonClicked);
 		EventManager.Instance.RemoveListener<EscapeButtonClickedEvent>(EscapeButtonClicked);
+		
+		//Game Type Choice
+		EventManager.Instance.RemoveListener<LocalButtonClickedEvent>(LocalButtonClicked);
+		EventManager.Instance.RemoveListener<MultiplayerButtonClickedEvent>(MultiplayerButtonClicked);
+		
+		//Player Type Choice
+		EventManager.Instance.RemoveListener<VsHumanButtonClickedEvent>(VsHumanButtonClicked);
+		EventManager.Instance.RemoveListener<VsCpuButtonClickedEvent>(VsCpuButtonClicked);
+		
+		//Number of player selection
+		EventManager.Instance.RemoveListener<OnePlayerButtonClickedEvent>(OnePlayerButtonClicked);
+		EventManager.Instance.RemoveListener<TwoPlayerButtonClickedEvent>(TwoPlayerButtonClicked);
+		EventManager.Instance.RemoveListener<ThreePlayerButtonClickedEvent>(ThreePlayerButtonClicked);
+		EventManager.Instance.RemoveListener<FourPlayerButtonClickedEvent>(FourPlayerButtonClicked);
+		
+		//Level Select
+		EventManager.Instance.RemoveListener<LevelOneButtonClickedEvent>(LevelOneButtonClicked);
+		EventManager.Instance.RemoveListener<LevelTwoButtonClickedEvent>(LevelTwoButtonClicked);
+		EventManager.Instance.RemoveListener<LevelThreeButtonClickedEvent>(LevelThreeButtonClicked);
 
 		//Enemy
 		EventManager.Instance.RemoveListener<EnemyHasBeenDestroyedEvent>(EnemyHasBeenDestroyed);
@@ -202,14 +236,14 @@ public class GameManager : Manager<GameManager> {
 
 	#region Game flow & Gameplay
 	//Game initialization
-	void InitNewGame()
+	void InitNewGame(int levelNumber)
 	{
 		SetScore(0);
 		SetNLives(m_NStartLives);
 		SetNEnemiesLeftBeforeVictory(m_NEnemiesToDestroyForVictory);
 
 		m_GameState = GameState.gameNextLevel; // le game state sera set à play après que le level est instantié
-		EventManager.Instance.Raise(new GoToNextLevelEvent());
+		EventManager.Instance.Raise(new GoToLevelEvent(){eLevelIndex = --levelNumber});
 	}
 	#endregion
 
@@ -282,11 +316,6 @@ public class GameManager : Manager<GameManager> {
 		Menu();
 	}
 
-	private void PlayButtonClicked(PlayButtonClickedEvent e)
-	{
-		Play();
-	}
-
 	private void NextLevelButtonClicked(NextLevelButtonClickedEvent e)
 	{
 		EventManager.Instance.Raise(new GoToNextLevelEvent());
@@ -303,6 +332,53 @@ public class GameManager : Manager<GameManager> {
 			Pause();
 	}
 	
+	private void LocalButtonClicked(LocalButtonClickedEvent e)
+	{
+	}
+	
+	private void MultiplayerButtonClicked(MultiplayerButtonClickedEvent e)
+	{
+	}
+	
+	private void VsHumanButtonClicked(VsHumanButtonClickedEvent e)
+	{
+	}
+	
+	private void VsCpuButtonClicked(VsCpuButtonClickedEvent e)
+	{
+	}
+	
+	private void OnePlayerButtonClicked(OnePlayerButtonClickedEvent e)
+	{
+	}
+	
+	private void TwoPlayerButtonClicked(TwoPlayerButtonClickedEvent e)
+	{
+	}
+	
+	private void ThreePlayerButtonClicked(ThreePlayerButtonClickedEvent e)
+	{
+	}
+	
+	private void FourPlayerButtonClicked(FourPlayerButtonClickedEvent e)
+	{
+	}
+	
+	private void LevelOneButtonClicked(LevelOneButtonClickedEvent e)
+	{
+		Play(1);
+	}
+	
+	private void LevelTwoButtonClicked(LevelTwoButtonClickedEvent e)
+	{
+		Play(2);
+	}
+	
+	private void LevelThreeButtonClicked(LevelThreeButtonClickedEvent e)
+	{
+		Play(3);
+	}
+
 	private void CreditsButtonClicked(CreditsButtonClickedEvent e)
 	{
 		Credits();
@@ -318,12 +394,12 @@ public class GameManager : Manager<GameManager> {
 		EventManager.Instance.Raise(new GameMenuEvent());
 	}
 
-	private void Play()
+	private void Play(int levelNumber)
 	{
 		m_GameState = GameState.gamePlay;
 		MusicLoopsManager.Instance.PlayMusic(Constants.GAMEPLAY_MUSIC);
 		EventManager.Instance.Raise(new GamePlayEvent());
-		InitNewGame();
+		InitNewGame(levelNumber);
 	}
 
 	private void Pause()

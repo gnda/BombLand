@@ -61,7 +61,7 @@ public class Level : MonoBehaviour, IEventHandler
         //EventManager.Instance.AddListener<PlayerHasMovedEvent>(PlayerHasMoved);
         EventManager.Instance.AddListener<EnemyHasBeenDestroyedEvent>(EnemyHasBeenDestroyed);
         EventManager.Instance.AddListener<BombIsDestroyingEvent>(BombIsDestroying);
-        EventManager.Instance.AddListener<PowerCoinHasBeenHitEvent>(PowerCoinHasBeenHit);
+        //EventManager.Instance.AddListener<PowerCoinHasBeenHitEvent>(PowerCoinHasBeenHit);
     }
 
     public void UnsubscribeEvents()
@@ -69,7 +69,7 @@ public class Level : MonoBehaviour, IEventHandler
         //EventManager.Instance.RemoveListener<PlayerHasMovedEvent>(PlayerHasMoved);
         EventManager.Instance.RemoveListener<EnemyHasBeenDestroyedEvent>(EnemyHasBeenDestroyed);
         EventManager.Instance.RemoveListener<BombIsDestroyingEvent>(BombIsDestroying);
-        EventManager.Instance.RemoveListener<PowerCoinHasBeenHitEvent>(PowerCoinHasBeenHit);
+        //EventManager.Instance.RemoveListener<PowerCoinHasBeenHitEvent>(PowerCoinHasBeenHit);
     }
 
     private void OnDestroy()
@@ -212,7 +212,7 @@ public class Level : MonoBehaviour, IEventHandler
         }*/
     }
 
-    IEnumerator EnemiesBecomeCoinsCoroutine(float duration)
+    /*IEnumerator EnemiesBecomeCoinsCoroutine(float duration)
     {
         m_LevelState = LevelState.enemiesAreCoins;
         foreach (var item in enemies)
@@ -223,12 +223,12 @@ public class Level : MonoBehaviour, IEventHandler
         yield return new WaitForSeconds(duration);
         m_LevelState = LevelState.enemiesAreEnemies;
         SetBombPoints(0);
-    }
+    }*/
 
-    void PowerCoinHasBeenHit(PowerCoinHasBeenHitEvent e)
+   /* void PowerCoinHasBeenHit(PowerCoinHasBeenHitEvent e)
     {
         StartCoroutine(EnemiesBecomeCoinsCoroutine(m_EnemiesBecomeCoinDuration));
-    }
+    }*/
 
     void EnemyHasBeenDestroyed(EnemyHasBeenDestroyedEvent e)
     {

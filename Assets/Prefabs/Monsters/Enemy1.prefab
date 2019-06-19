@@ -61,36 +61,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3cec048e495795f43b8a2c7a57cb3bed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_MaxTranslationSpeed: 2
-  m_MinTranslationSpeed: 1
-  m_TranslationSpeedProbaCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0.5188675
-      inSlope: -0.044104125
-      outSlope: -0.044104125
-      tangentMode: 34
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 0.9624939
-      value: 0.47641754
-      inSlope: -0.044104125
-      outSlope: -0.044104125
-      tangentMode: 34
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  m_EnemyGfx: {fileID: 6211629896054303524}
-  m_ScoreCoin: 0
-  m_MoveDuration: 1
-  m_WaitDuration: 1
+  score: 100
+  moveDuration: 0.5
 --- !u!54 &5766142576576963306
 Rigidbody:
   m_ObjectHideFlags: 0

@@ -33,12 +33,14 @@ public class LevelsManager : Manager<LevelsManager> {
 	{
 		base.SubscribeEvents();
 		EventManager.Instance.AddListener<GoToNextLevelEvent>(GoToNextLevel);
+		EventManager.Instance.AddListener<GoToLevelEvent>(GoToLevel);
 	}
 
 	public override void UnsubscribeEvents()
 	{
 		base.UnsubscribeEvents();
 		EventManager.Instance.RemoveListener<GoToNextLevelEvent>(GoToNextLevel);
+		EventManager.Instance.RemoveListener<GoToLevelEvent>(GoToLevel);
 	}
 	#endregion
 
@@ -77,9 +79,16 @@ public class LevelsManager : Manager<LevelsManager> {
 	{
 		Reset();
 	}
+	
+	public void GoToLevel(GoToLevelEvent e)
+	{
+		currentLevelIndex = e.eLevelIndex;
+		StartCoroutine(GoToNextLevelCoroutine());
+	}
 
 	public void GoToNextLevel(GoToNextLevelEvent e)
 	{
+		Debug.Log("Here");
 		currentLevelIndex++;
 		StartCoroutine(GoToNextLevelCoroutine());
 	}

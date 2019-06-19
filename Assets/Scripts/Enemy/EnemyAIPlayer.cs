@@ -6,7 +6,7 @@ using JetBrains.Annotations;
 using UnityEngine;
 using SDD.Events;
 
-public class EnemyController : SimpleGameStateObserver, IMoveable{
+public class EnemyAIPlayer : SimpleGameStateObserver{
 	
 	public Transform Transf { get; set; }
 	public bool IsMoving { get; set; }

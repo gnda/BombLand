@@ -171,6 +171,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e0357deb5c6be8e43bf7ffdb20366717, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  moveDuration: 0.2
   bombPrefab: {fileID: 1984920548205964, guid: 315c355fcf87fda41a5ec29b11d97a94, type: 3}
   dropCoolDownDuration: 1
 --- !u!114 &-5582225252228673948

@@ -1,5 +1,4 @@
 using System.Collections;
-using Common;
 using DefaultNamespace;
 using JetBrains.Annotations;
 using SDD.Events;
@@ -69,17 +68,17 @@ public class MovementManager : Manager<MovementManager>
     {
 	    Vector3 basePosition = element.Transf.position;
 
-	    if(CheckDirection(direc))
+	    if(CheckDirection(basePosition, direc))
 	    {
-		    StartCoroutine(TranslationCoroutine(0.2f, element, 
+		    StartCoroutine(TranslationCoroutine(element, 
 			    basePosition, basePosition + direc, null));
 	    }
     }
 
-    private bool CheckDirection(Vector3 direc)
+    private bool CheckDirection(Vector3 basePostion, Vector3 direc)
     {
-	    int x = (int) direc.x, z = (int) direc.z;
-	    
+	    /*int x = (int) direc.x, z = (int) direc.z;
+
 	    if (direc == Vector3.forward)
 	    {
 		    return z + 1 < tilesState.GetLength(1) 
@@ -99,12 +98,13 @@ public class MovementManager : Manager<MovementManager>
 	    {
 		    return x - 1 < tilesState.GetLength(0) 
 		           && tilesState[x - 1, z] != 'X' && tilesState[x - 1, z] != 'D';
-	    }
+	    }*/
 
-	    return false;
+	    return tilesState[(int) (basePostion.x + direc.x), (int) (basePostion.z + direc.z)] != 'X'
+	           && tilesState[(int) (basePostion.x + direc.x), (int) (basePostion.z + direc.z)] != 'D';
     }
 
-    private IEnumerator TranslationCoroutine(float duration, IMoveable element, 
+    private IEnumerator TranslationCoroutine(IMoveable element, 
 	    Vector3 startPos, Vector3 endPos, 
 	    [CanBeNull] EasingFunctionDelegate easingFunction)
     {
@@ -112,9 +112,9 @@ public class MovementManager : Manager<MovementManager>
 
 	    element.IsMoving = true;
 	    
-	    while (elapsedTime < duration)
+	    while (elapsedTime < element.MoveDuration)
 	    {
-		    float elapsedTimePerc = elapsedTime / duration;
+		    float elapsedTimePerc = elapsedTime /  element.MoveDuration;
 		    element.Transf.position = Vector3.Lerp(startPos, endPos, 
 			    easingFunction != null ? 
 				    easingFunction(0,1,elapsedTimePerc) : elapsedTimePerc);

@@ -129,8 +129,8 @@ MonoBehaviour:
   offDuration: 1
   litDuration: 2
   explosionDuration: 1
-  baseTileExplosionRange: 4
-  baseWallExplosionRange: 1
+  baseTileExplosionRange: 3
+  baseWallExplosionRange: 3
 --- !u!135 &135549538578348062
 SphereCollider:
   m_ObjectHideFlags: 0

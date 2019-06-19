@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &1834731428525201188
+--- !u!1 &2847453902384248138
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,22 +8,22 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 2621129513682935406}
-  - component: {fileID: 7977029534320272541}
+  - component: {fileID: 2847453902384248181}
+  - component: {fileID: 2847453902384248067}
   m_Layer: 0
-  m_Name: Level1
+  m_Name: Level3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &2621129513682935406
+--- !u!4 &2847453902384248181
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1834731428525201188}
+  m_GameObject: {fileID: 2847453902384248138}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -31,13 +31,13 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7977029534320272541
+--- !u!114 &2847453902384248067
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1834731428525201188}
+  m_GameObject: {fileID: 2847453902384248138}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 14d1eb1d75320384ca0cd2922ac9fe10, type: 3}
@@ -52,7 +52,7 @@ MonoBehaviour:
   m_PowerCoinPrefab: {fileID: 0}
   m_PowerCoinSpawnPoints: []
   m_EnemiesBecomeCoinDuration: 0
-  levelDesign: {fileID: 2800000, guid: 02fd474fe91101091b5f6881314ebc89, type: 3}
+  levelDesign: {fileID: 2800000, guid: 7c7e70a8d3c38f3f79009118c879434c, type: 3}
   groundTilePrefab: {fileID: 1098925979027782, guid: b94ba9115cbf341fd99ba437f4d77015,
     type: 3}
   wallPrefab: {fileID: 4145590106752234625, guid: fab1336843e0028b5b2bfc60f574f8e3,
