@@ -4,8 +4,8 @@ MonoImporter:
   externalObjects: {}
   serializedVersion: 2
   defaultReferences:
-  - waterTex: {fileID: 2800000, guid: b3b93417e764a48438369dfd5de14b56, type: 3}
-  - distortionTex: {fileID: 2800000, guid: f6acd684980920849a180e1c541fb199, type: 3}
+  - waterTex: {fileID: 2800000, guid: baf823fa3ed7ec04fb969632a746866b, type: 3}
+  - distortionTex: {fileID: 2800000, guid: 0372561fca580954dbcdead393798cf3, type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

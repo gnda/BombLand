@@ -94,7 +94,7 @@ public class GameManager : Manager<GameManager>
 
         EventManager.Instance.Raise(new GameStatisticsChangedEvent()
         {eBestScore = BestScore, ePlayerNumber = player.PlayerNumber, 
-            eScore = score });
+            eScore = score, eNMonstersLeft = nMonstersLeft});
     }
 
     #endregion
@@ -255,6 +255,7 @@ public class GameManager : Manager<GameManager>
     private void LevelHasBeenInstantiated(LevelHasBeenInstantiatedEvent e)
     {
         timer = e.eLevel.LevelDuration;
+        nMonstersLeft = Monsters.Count;
 
         EventManager.Instance.Raise(new GameHasStartedEvent());
         EventManager.Instance.Raise(new GameStatisticsChangedEvent() 

@@ -36,7 +36,6 @@ public class Explosion : MonoBehaviour
                 EventManager.Instance.Raise(
                     new ElementMustBeDestroyedEvent() 
                         {eElement = other.gameObject});
-               
             }
             else Destroy(other.gameObject);
         }

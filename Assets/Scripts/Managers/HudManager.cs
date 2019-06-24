@@ -101,7 +101,7 @@ public class HudManager : Manager<HudManager>
 		if (e.eBestScore != 0)
 			txtBestScore.text = e.eBestScore.ToString();
 
-		txtMonstersLeft.text = e.eNMonstersLeft.ToString();
+        txtMonstersLeft.text = e.eNMonstersLeft.ToString();
 	}
 
 	private void GameHasStarted(GameHasStartedEvent e)
