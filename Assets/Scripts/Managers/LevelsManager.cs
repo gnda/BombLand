@@ -1,24 +1,19 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections;
 using UnityEngine;
 using SDD.Events;
 
 public class LevelsManager : Manager<LevelsManager> {
 
 	[Header("LevelsManager")]
+	
 	#region levels & current level management
+	
 	private int currentLevelIndex;
 	private GameObject currentLevelGO;
-	private Level currentLevel;
-	public Level CurrentLevel { get { return currentLevel; } }
+
 
 	[SerializeField] private GameObject[] levelsPrefabs;
-
-	protected override void Awake()
-	{
-		base.Awake();
-	} 
+	
 	#endregion
 
 	#region Manager implementation
@@ -33,30 +28,29 @@ public class LevelsManager : Manager<LevelsManager> {
 	{
 		base.SubscribeEvents();
 		EventManager.Instance.AddListener<GoToNextLevelEvent>(GoToNextLevel);
-		EventManager.Instance.AddListener<GoToLevelEvent>(GoToLevel);
 	}
 
 	public override void UnsubscribeEvents()
 	{
 		base.UnsubscribeEvents();
 		EventManager.Instance.RemoveListener<GoToNextLevelEvent>(GoToNextLevel);
-		EventManager.Instance.RemoveListener<GoToLevelEvent>(GoToLevel);
 	}
 	#endregion
 
 	#region Level flow
 	void Reset()
 	{
+		Player.PlayerCount = 0;
+
+		EventManager.Instance.Raise(new LevelHasBeenDestroyedEvent());
 		Destroy(currentLevelGO);
 		currentLevelGO = null;
-		currentLevelIndex = -1;
 	}
 
 	void InstantiateLevel()
 	{
 		currentLevelIndex = Mathf.Max(currentLevelIndex, 0) % levelsPrefabs.Length;
 		currentLevelGO = Instantiate(levelsPrefabs[currentLevelIndex]);
-		currentLevel = currentLevelGO.GetComponent<Level>();
 	}
 
 	private IEnumerator GoToNextLevelCoroutine()
@@ -64,9 +58,9 @@ public class LevelsManager : Manager<LevelsManager> {
 		Destroy(currentLevelGO);
 		while (currentLevelGO) yield return null;
 
-		InstantiateLevel();
-
-		
+		if (currentLevelIndex == levelsPrefabs.Length)
+			EventManager.Instance.Raise(new CreditsButtonClickedEvent());
+		else InstantiateLevel();
 	}
 	#endregion
 
@@ -79,17 +73,16 @@ public class LevelsManager : Manager<LevelsManager> {
 	{
 		Reset();
 	}
-	
-	public void GoToLevel(GoToLevelEvent e)
-	{
-		currentLevelIndex = e.eLevelIndex;
-		StartCoroutine(GoToNextLevelCoroutine());
-	}
 
 	public void GoToNextLevel(GoToNextLevelEvent e)
 	{
-		Debug.Log("Here");
-		currentLevelIndex++;
+		Player.PlayerCount = 0;
+		
+		if (e.eLevelIndex != -1)
+			currentLevelIndex = e.eLevelIndex;
+		else
+			currentLevelIndex++;
+		
 		StartCoroutine(GoToNextLevelCoroutine());
 	}
 	#endregion

@@ -1,10 +1,6 @@
 using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
-using System;
 using System.Xml;
-using System.Linq;
-using Random = UnityEngine.Random;
 
 [System.Serializable]
 public class MyAudioClip

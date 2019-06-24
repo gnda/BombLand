@@ -1,20 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using Common;
-using DefaultNamespace;
-using JetBrains.Annotations;
-using UnityEngine;
-using SDD.Events;
+﻿using UnityEngine;
 
 public class EnemyAIPlayer : SimpleGameStateObserver{
 	
 	public Transform Transf { get; set; }
 	public bool IsMoving { get; set; }
-	public char Symbol { get; set; }
-
-	private int[,] step;
-	
-	char[,] tilesState;
 
 	protected override void Awake()
 	{
@@ -24,10 +13,7 @@ public class EnemyAIPlayer : SimpleGameStateObserver{
 
 	// Use this for initialization
 	void Start () {
-		tilesState = GameManager.Instance.Level.TilesState;
-		step = new int[tilesState.GetLength(0),tilesState.GetLength(1)];
 		
-		Debug.Log(step[0,0]);
 	}
 
 	// Update is called once per frame

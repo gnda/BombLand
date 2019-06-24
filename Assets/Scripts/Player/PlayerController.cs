@@ -2,21 +2,31 @@
 using UnityEngine;
 using SDD.Events;
 
-public class PlayerController : SimpleGameStateObserver, IEventHandler, IMoveable{
+public class PlayerController : SimpleGameStateObserver, IEventHandler, IMoveable
+{
+	#region Movement
+	[Header("MovementSettings")]
+	[SerializeField] private float moveDuration = 0.2f;
 	
 	public Transform Transf { get; set; }
+	public bool IsMoving { get; set; } = false;
+	public bool IsDestroyed { get; set; }
 
-	public float MoveDuration { get { return moveDuration;} }
-
-	[SerializeField] private float moveDuration;
-	[SerializeField] private GameObject bombPrefab;
-	[SerializeField] private float dropCoolDownDuration;
-
-	public bool IsMoving { get; set; }
-	public char Symbol { get; set; }
-
+	public float MoveDuration
+	{
+		get { return moveDuration; }
+		set { moveDuration = value; }
+	}
+	#endregion
+	
+	#region Bomb
+	[Header("BombSettings")]
+	[SerializeField] private float dropCoolDownDuration = 1;
+	
 	float nextDropTime;
+	#endregion
 
+	#region MonoBehaviour lifecycle
 	protected override void Awake()
 	{
 		base.Awake();
@@ -36,25 +46,22 @@ public class PlayerController : SimpleGameStateObserver, IEventHandler, IMoveabl
 		float vInput = Input.GetAxis("Vertical");
 
 		if (hInput != 0f)
-		{
 			EventManager.Instance.Raise(new MoveElementEvent()
 			{
 				eMoveable = this,
 				eDirection = Mathf.Sign(hInput) * Vector3.right
 			});
-		} 
 		else if (vInput != 0f)
-		{
 			EventManager.Instance.Raise(new MoveElementEvent()
 			{
 				eMoveable = this,
 				eDirection = Mathf.Sign(vInput) * Vector3.forward
 			});
-		}
-		
+
 		if (Input.GetButtonDown("Jump") && Time.time > nextDropTime)
 		{
-			GameObject bombGO = Instantiate(bombPrefab);
+			GameObject bombGO = Instantiate(GetComponent<Player>().bombPrefab,
+				GetComponentInParent<Level>().transform);
 			bombGO.GetComponent<Bomb>().Player = GetComponent<Player>();
 			bombGO.transform.position = 
 				new Vector3((int)Transf.position.x, 0.5f, (int)Transf.position.z);
@@ -63,23 +70,14 @@ public class PlayerController : SimpleGameStateObserver, IEventHandler, IMoveabl
 		}
 	}
 
-	private void OnCollisionExit(Collision collision)
-	{
-		if (collision.gameObject.CompareTag("Ground")
-			|| collision.gameObject.CompareTag("Platform"))
-		{
-			//m_IsGrounded = false;
-		}
-	}
-
 	private void OnTriggerEnter(Collider other)
 	{
 		if(GameManager.Instance.IsPlaying
 			&& other.gameObject.CompareTag("Enemy"))
 		{
-			if(other.GetComponent<Enemy>())
-				EventManager.Instance.Raise(new PlayerHasBeenHitEvent()
-					{ eEnemy = GetComponent<Enemy>() });
+			EventManager.Instance.Raise(new ElementMustBeDestroyedEvent()
+					{ eElement = gameObject });
 		}
 	}
+	#endregion
 }

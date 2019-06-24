@@ -5,8 +5,8 @@ namespace DefaultNamespace
     public interface IMoveable
     {
         bool IsMoving { get; set; }
-        char Symbol { get; set; }
-        float MoveDuration { get; }
+        bool IsDestroyed { get; set; }
+        float MoveDuration { get; set; }
         Transform Transf { get; set; }
     }
 }

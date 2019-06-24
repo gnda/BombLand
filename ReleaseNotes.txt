@@ -1,0 +1,134 @@
+#########################################################
+#  ____                  _     _                     _  #
+# |  _ \                | |   | |                   | | #
+# | |_) | ___  _ __ ___ | |__ | |     __ _ _ __   __| | #
+# |  _ < / _ \| '_ ` _ \| '_ \| |    / _` | '_ \ / _` | #
+# | |_) | (_) | | | | | | |_) | |___| (_| | | | | (_| | #
+# |____/ \___/|_| |_| |_|_.__/|______\__,_|_| |_|\__,_| #
+#                                                       #
+#########################################################
+
+
+-- Release Notes --
+
+----------------------------------------
+
+Sommaire
+
+I - Instructions (explication du jeu)
+
+II - Remarques et bugs connus
+
+III - Assets et éléments utilisés
+
+IV - Rôles dans ce projet
+
+Conclusion
+
+----------------------------------------
+
+
+I - Instructions (explication du jeu)
+
+
+Dans BombLand, l'objectif est de détruire tous les monstres avec des bombes.
+
+Le joueur et les ennemis peuvent se déplacer dans 4 directions (haut,bas,
+gauche, droite).
+
+Le joueur dispose de 5 touches tout au long du jeu :
+
+ - les touches wasd (zqsd sur un clavier azerty) mais aussi des touches
+   haut,bas,gauche et droite pour se déplacer
+
+ - Il peut poser des bombes avec la touche barre d'espace
+
+BombLand peut comporter jusqu'à 4 joueur. Celui qui a fait le plus haut
+score, et qui est vivant à la fin du niveau, gagne.
+
+Si le joueur se fait toucher par un monstre, il meurt.
+Attention si un monstre vous voit il essaiera de vous poursuivre !
+
+Il faut également terminer le niveau et avoir détruit tous les monstres
+avant la fin du temps imparti, sinon on perd la partie.
+
+-- Non Fonctionnel --
+
+On peut jouer en local jusqu'à 4 joueurs, ou alors jouer contre le CPU
+(jusqu'à 4 également).
+
+Un mode multijoueur est également disponible dans lequel on peut rejoindre
+une partie ou en créer une.
+
+
+II - Remarques, bugs connus, améliorations possibles
+
+
+-- Remarques
+
+Pour le moment le mode multijoueur online et local ne fonctionne pas.
+Je n'ai pas eu le temps d'améliorer le rendu graphique et sonore du jeu.
+
+J'ai voulu utiliser une matrice dans un premier temps pour repérer les
+éléments du jeu, mais au final j'ai préférer utiliser les raycasts afin de
+ne pas à avoir à actualiser cette matrice dans tous mes objets.
+
+-- Bugs connus
+
+Si deux bombes sont proches l'une de l'autre, l'explosion de l'une
+n'entraîne pas l'explosion de l'autre.
+
+-- Améliorations possibles
+
+ - programmer une IA fonctionnelle pour le joueur adverse
+ - terminer l'implémentation du multijoueur avec Photon Bolt
+
+
+III - Assets et éléments utilisés
+
+
+Pour ce projet, je me suis servi de : 
+
+ - assets fait sous Unity (formes basiques) : gratuits tout comme Unity
+   si on fait des profits en dessous de 100 000$ par an 
+   - licence : Unity Terms of Service.
+
+ - sons trouvés sur : 
+
+ - musiques trouvées sur : 
+
+ - plugin Photon Bolt en version Free permettant d'avoir jusqu'à
+   20 joueurs en parallèle (5 parties max ducoup)
+   - licence : Photon License Terms.
+
+ - UI fait avec :
+
+
+IV - Rôles dans ce projet
+
+
+Dans ce projet je me suis focalisé sur les rôles suivants :
+
+ - Gameplay programmer
+ - Game / Level designer
+ - Producer
+
+
+Conclusion
+
+
+Ce projet fut très intéressant pour mettre en pratique ce qu'on a appris
+sur Unity.
+
+Être seul à finalement jouer en ma défaveur puisque je suis en retard dans
+la livraison du projet et que je me rend compte que tout le monde s'est 
+beaucoup investit, ce qui change par rapport à d'autre projets.
+
+Cependant, cela m'a permis de bien comprendre qu'il y a différents rôles dans 
+création d'un jeu et qu'on ne peut pas tout endosser.
+
+De plus il faut apprendre à lâcher prise sur ce qu'on ne peut pas faire dans un
+temps donné.
+
+Je constate donc que c'est un bon entraînement pour la GameJam de l'année prochaine,
+au cours de laquelle il faudra faire beaucoup dans un temps bien plus court.

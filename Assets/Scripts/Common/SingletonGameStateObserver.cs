@@ -1,8 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using SDD.Events;
-using System;
 
 public abstract class SingletonGameStateObserver<T> :  Singleton<T>,IEventHandler where T:Component
 {
@@ -16,6 +13,7 @@ public abstract class SingletonGameStateObserver<T> :  Singleton<T>,IEventHandle
 		EventManager.Instance.AddListener<GameVictoryEvent>(GameVictory);
 		EventManager.Instance.AddListener<GameStatisticsChangedEvent>(GameStatisticsChanged);
 		EventManager.Instance.AddListener<GameCreditsEvent>(GameCredits);
+		EventManager.Instance.AddListener<GameExitEvent>(GameExit);
 	}
 
 	public virtual void UnsubscribeEvents()
@@ -27,7 +25,8 @@ public abstract class SingletonGameStateObserver<T> :  Singleton<T>,IEventHandle
 		EventManager.Instance.RemoveListener<GameOverEvent>(GameOver);
 		EventManager.Instance.RemoveListener<GameVictoryEvent>(GameVictory);
 		EventManager.Instance.RemoveListener<GameStatisticsChangedEvent>(GameStatisticsChanged);
-		EventManager.Instance.AddListener<GameCreditsEvent>(GameCredits);
+		EventManager.Instance.RemoveListener<GameCreditsEvent>(GameCredits);
+		EventManager.Instance.RemoveListener<GameExitEvent>(GameExit);
 	}
 
 	protected override void Awake()
@@ -66,6 +65,10 @@ public abstract class SingletonGameStateObserver<T> :  Singleton<T>,IEventHandle
 	}
 	
 	protected virtual void GameCredits(GameCreditsEvent e)
+	{
+	}
+
+	protected virtual void GameExit(GameExitEvent e)
 	{
 	}
 

@@ -43,16 +43,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14d1eb1d75320384ca0cd2922ac9fe10, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  levelDuration: 700
+  levelPosition: {x: 0, y: 0, z: 0}
+  levelDesign: {fileID: 2800000, guid: 6aacd64b0e185a70eb0c2eda99ef1b89, type: 3}
   playerPrefabs:
-  - {fileID: 8403109495700023078, guid: a05106dffe1135d88a49c01faad5caa6, type: 3}
+  - {fileID: 308719030581511815, guid: 4a5ac9c14f675979bbd54eb414195275, type: 3}
+  - {fileID: 7442733766598716310, guid: 95d419785b496a40d8a7b1aef97a814b, type: 3}
+  - {fileID: 7402137674743548951, guid: c4bc4dbf185394d45b211e4edf8b13ce, type: 3}
+  - {fileID: 4473247045625577259, guid: a6e98ff018e6a4cd7acb72617870ce5b, type: 3}
   enemyPrefabs:
-  - {fileID: 7291343781405201290, guid: 14ef91ba26fa6100bbdeb424f76b0fb5, type: 3}
-  m_WaitDurationBeforeLightFirstWick: 0
-  m_NBombPointsToBeCollectedForPowerCoin: 0
-  m_PowerCoinPrefab: {fileID: 0}
-  m_PowerCoinSpawnPoints: []
-  m_EnemiesBecomeCoinDuration: 0
-  levelDesign: {fileID: 2800000, guid: 7c7e70a8d3c38f3f79009118c879434c, type: 3}
+  - {fileID: 237251078003386360, guid: 83a6667ccfb1d1de2bcec9a9b6aae1f1, type: 3}
+  bombPrefabs:
+  - {fileID: 255279432704905292, guid: c207185cdd666a1cfb83f3127219c19c, type: 3}
+  backgroundPrefab: {fileID: 1486267960877148479, guid: 498660c65167dc857a40a8b9595205e7,
+    type: 3}
   groundTilePrefab: {fileID: 1098925979027782, guid: b94ba9115cbf341fd99ba437f4d77015,
     type: 3}
   wallPrefab: {fileID: 4145590106752234625, guid: fab1336843e0028b5b2bfc60f574f8e3,

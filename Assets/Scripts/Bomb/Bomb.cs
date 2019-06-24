@@ -1,84 +1,110 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
-using SDD.Events;
 
 public class Bomb : MonoBehaviour
 {
+    #region Prefabs & Settings
+    [Header("BombPrefabs")]
+    [SerializeField] private GameObject explosionPrefab;
 
-	[SerializeField] private GameObject explosionPrefab;
-	
-	[SerializeField] private float offDuration;
-	[SerializeField] private float litDuration;
-	[SerializeField] private float explosionDuration;
-	[SerializeField] private int baseTileExplosionRange;
-	[SerializeField] private int baseWallExplosionRange;
-	
-	private char[,] tilesState;
-	public Player Player { get; set; }
+    [Header("BombSettings")]
+    [SerializeField] private float offDuration;
+    [SerializeField] private float litDuration;
+    [SerializeField] private float explosionDuration;
+    [SerializeField] private int baseTileExplosionRange;
+    [SerializeField] private int baseWallExplosionRange;
+    
+    public float ExplosionDuration { 
+        get => explosionDuration;
+        set => explosionDuration = value;
+    }
+    #endregion
+    public Player Player { get; set; }
 
-	private void Start()
-	{
-		tilesState = GameManager.Instance.Level.TilesState;
-		StartCoroutine(TheBombIsOff());
-	}
+    #region MonoBehaviour lifecycle
+    private void Start()
+    {
+        StartCoroutine(TheBombIsOff());
+    }
+    #endregion
 
-	#region BombLifeCycleCoroutines
+    #region Bomb lifecycle coroutines
+    IEnumerator LightTheBombCoroutine()
+    {
+        yield return new WaitForSeconds(litDuration);
+        explode();
+        Destroy(gameObject);
+    }
 
-	IEnumerator DestroyTheBombCoroutine()
-	{
-		yield return new WaitForSeconds(explosionDuration);
-		Destroy(gameObject);
-	}
-	
-	IEnumerator LightTheBombCoroutine()
-	{
-		yield return new WaitForSeconds(litDuration);
-		explode();
-		StartCoroutine(DestroyTheBombCoroutine());
-	}
+    IEnumerator TheBombIsOff()
+    {
+        yield return new WaitForSeconds(offDuration);
+        StartCoroutine(LightTheBombCoroutine());
+    }
+    #endregion
 
-	IEnumerator TheBombIsOff()
-	{
-		yield return new WaitForSeconds(offDuration);
-		StartCoroutine(LightTheBombCoroutine());
-	}
+    #region Explosion methods
+    private int destroyedBlocksCount;
+    private void explode()
+    {
+        Vector3[] direction = new[] {Vector3.forward, -Vector3.forward, -Vector3.right, Vector3.right};
 
-	#endregion
+        createExplosion(transform.position);
+        
+        foreach (Vector3 d in direction)
+        {
+            destroyedBlocksCount = 0;
 
-	private void explode()
-	{
-		Vector3[] direction = new[] {Vector3.forward, -Vector3.forward, -Vector3.right, Vector3.right};
-		int destroyedBlocksCount;
+            for (int i = 1; i <= baseTileExplosionRange; i++)
+            {
+                Vector3 newPosition = transform.position + d * i;
 
-		foreach (Vector3 d in direction)
-		{
-			destroyedBlocksCount = 0;
-			for (int i = 1; i <= baseTileExplosionRange; i++)
-			{
-				Vector3 newPosition = transform.position + d * i;
-				if (tilesState[(int) newPosition.x, (int) newPosition.z] != 'X' 
-				    && destroyedBlocksCount < baseWallExplosionRange){
-					GameObject explosionGO = Instantiate(explosionPrefab, transform);
-					explosionGO.SetActive(true);
-					explosionGO.name = "Explosion " + i;
-					explosionGO.transform.position = newPosition;
-					if (tilesState[(int) newPosition.x, (int) newPosition.z] == 'D')
-						destroyedBlocksCount++;
-				}
-				else break;
-			}
-		}
-	}
+                List<RaycastHit> hits =
+                    Physics.RaycastAll(transform.position, d, 1f * i).ToList();
+                
+                if (hits.Count > 0)
+                {
+                    if (hits.TrueForAll(item => 
+                            Vector3.Distance(newPosition, item.transform.position) > 0))
+                        createExplosion(newPosition);
+                    else
+                    {
+                        hits.RemoveAll(item => 
+                            item.transform.GetComponent<Destroyable>() == null);
 
-	private void OnTriggerEnter(Collider other)
-	{
-		/*if(GameManager.Instance.IsPlaying && other.CompareTag("Player"))
-		{
-			EventManager.Instance.Raise(new ScoreItemEvent() { eScore = this as IScore });
-			EventManager.Instance.Raise(new BombIsDestroyingEvent() { eBomb = this });
-			Destroy(gameObject);
-		}*/
-	}
+                        if (hits.Count > 0)
+                        {
+                            hits.Sort((a, b) =>
+                                Vector3.Distance(transform.position, a.point)
+                                    .CompareTo(Vector3.Distance(transform.position, b.point)));
+
+                            createExplosion(newPosition);
+                            
+                            if (hits[0].transform.CompareTag("Platform"))
+                                destroyedBlocksCount++;
+                                
+                            if (destroyedBlocksCount >= baseWallExplosionRange)
+                                break;
+                        }
+                        else break;
+                    }
+                }
+                else createExplosion(newPosition);
+            }
+        }
+    }
+
+    private void createExplosion(Vector3 newPosition)
+    {
+        GameObject explosionGO = Instantiate(explosionPrefab, 
+            transform.position, Quaternion.identity);
+        explosionGO.transform.SetParent(transform.parent);
+        explosionGO.GetComponent<Explosion>().Bomb = GetComponent<Bomb>();
+        
+        explosionGO.SetActive(true);
+        explosionGO.transform.position = newPosition;
+    }
+    #endregion
 }

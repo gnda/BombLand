@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using DefaultNamespace;
 using JetBrains.Annotations;
 using SDD.Events;
@@ -6,36 +7,46 @@ using UnityEngine;
 
 public class MovementManager : Manager<MovementManager> 
 {
-	private bool isMoving = false;
-    char[,] tilesState;
-    
-    private delegate float EasingFunctionDelegate(float start, float end, float value);
+	#region Variables
+	private delegate float EasingFunctionDelegate(float start, float end, float value);
+	private Dictionary<IMoveable, Coroutine> _coroutines = null;
+	#endregion
 
-    #region Events' subscription
+	#region Events' subscription
     public override void SubscribeEvents()
     {
 	    base.SubscribeEvents();
 	    
-	    EventManager.Instance.AddListener<LevelHasBeenInstantiatedEvent>(LevelHasBeenInstantiated);
+	    //Element
 	    EventManager.Instance.AddListener<MoveElementEvent>(MoveElement);
+	    EventManager.Instance.AddListener<ElementMustBeDestroyedEvent>(DestroyElement);
+	    
+	    //Level
+	    EventManager.Instance.AddListener<LevelHasBeenDestroyedEvent>(LevelHasBeenDestroyed);
     }
 
     public override void UnsubscribeEvents()
     {
 	    base.UnsubscribeEvents();
 	    
-	    EventManager.Instance.RemoveListener<LevelHasBeenInstantiatedEvent>(LevelHasBeenInstantiated);
+	    //Element
 	    EventManager.Instance.RemoveListener<MoveElementEvent>(MoveElement);
+	    EventManager.Instance.RemoveListener<ElementMustBeDestroyedEvent>(DestroyElement);
+	    
+	    //Level
+	    EventManager.Instance.RemoveListener<LevelHasBeenDestroyedEvent>(LevelHasBeenDestroyed);
     }
     #endregion
     
     #region Manager implementation
     protected override IEnumerator InitCoroutine()
     {
+	    _coroutines = new Dictionary<IMoveable, Coroutine>();
 	    yield break;
     }
     #endregion
 
+    #region Movement functions
     private void Move(IMoveable element, Vector3 direc)
     {
 	    MoveWithEasing(element, direc, null);
@@ -69,39 +80,19 @@ public class MovementManager : Manager<MovementManager>
 	    Vector3 basePosition = element.Transf.position;
 
 	    if(CheckDirection(basePosition, direc))
-	    {
-		    StartCoroutine(TranslationCoroutine(element, 
+		    _coroutines[element] =  
+			    StartCoroutine(TranslationCoroutine(element, 
 			    basePosition, basePosition + direc, null));
-	    }
     }
 
-    private bool CheckDirection(Vector3 basePostion, Vector3 direc)
+    private bool CheckDirection(Vector3 basePosition, Vector3 direc)
     {
-	    /*int x = (int) direc.x, z = (int) direc.z;
+	    RaycastHit hit;
 
-	    if (direc == Vector3.forward)
-	    {
-		    return z + 1 < tilesState.GetLength(1) 
-		           && tilesState[x, z + 1] != 'X' && tilesState[x, z + 1] != 'D';
-	    } 
-	    else if (direc == -Vector3.forward)
-	    {
-		    return z - 1 < tilesState.GetLength(1) 
-		           && tilesState[x, z - 1] != 'X' && tilesState[x, z - 1] != 'D';
-	    }
-	    else if (direc == Vector3.right)
-	    {
-		    return x + 1 < tilesState.GetLength(0) 
-		           && tilesState[x + 1, z] != 'X' && tilesState[x + 1, z] != 'D';
-	    }
-	    else if (direc == -Vector3.right)
-	    {
-		    return x - 1 < tilesState.GetLength(0) 
-		           && tilesState[x - 1, z] != 'X' && tilesState[x - 1, z] != 'D';
-	    }*/
+	    if (Physics.Raycast(basePosition, direc, out hit, 1f))
+		    return !hit.transform.CompareTag("Platform");
 
-	    return tilesState[(int) (basePostion.x + direc.x), (int) (basePostion.z + direc.z)] != 'X'
-	           && tilesState[(int) (basePostion.x + direc.x), (int) (basePostion.z + direc.z)] != 'D';
+	    return true;
     }
 
     private IEnumerator TranslationCoroutine(IMoveable element, 
@@ -109,35 +100,54 @@ public class MovementManager : Manager<MovementManager>
 	    [CanBeNull] EasingFunctionDelegate easingFunction)
     {
 	    float elapsedTime = 0;
-
-	    element.IsMoving = true;
 	    
+	    element.IsMoving = true;
+    
 	    while (elapsedTime < element.MoveDuration)
 	    {
-		    float elapsedTimePerc = elapsedTime /  element.MoveDuration;
-		    element.Transf.position = Vector3.Lerp(startPos, endPos, 
+		    float elapsedTimePerc = elapsedTime / element.MoveDuration;
+		    element.Transf.position = Vector3.Lerp(startPos, endPos,
 			    easingFunction != null ? 
-				    easingFunction(0,1,elapsedTimePerc) : elapsedTimePerc);
+				    easingFunction(0, 1, elapsedTimePerc) : elapsedTimePerc);
 
 		    elapsedTime += Time.deltaTime;
 		    yield return null;
 	    }
-
-	    element.Transf.position = endPos;
 	    
-	    tilesState[(int) startPos.x, (int) startPos.z] = '.';
-	    tilesState[(int) endPos.x, (int) endPos.z] = element.Symbol;
-		
+	    element.Transf.position = endPos;
+	    _coroutines.Remove(element);
+	    
 	    yield return element.IsMoving = false;
     }
-
-    private void LevelHasBeenInstantiated(LevelHasBeenInstantiatedEvent e)
-    {
-	    tilesState = e.eLevel.TilesState;
-	    
-    }
+    
     private void MoveElement(MoveElementEvent e)
     {
 	    Move(e.eMoveable, e.eDirection);
     }
+
+    private void DestroyElement(ElementMustBeDestroyedEvent e)
+    {
+	    EventManager.Instance.Raise(new ElementIsBeingDestroyedEvent()
+	    { eElement = e.eElement });
+	    
+	    IMoveable element = e.eElement.GetComponent<IMoveable>();
+	    element.IsDestroyed = true;
+	    
+	    if (_coroutines.ContainsKey(element))
+	    {
+		    StopCoroutine(_coroutines[element]);
+		    _coroutines.Remove(element);
+		    Destroy(e.eElement);
+	    } else Destroy(e.eElement);
+    }
+    #endregion
+
+    #region Level Events Callbacks
+    private void LevelHasBeenDestroyed(LevelHasBeenDestroyedEvent e)
+    {
+	    if(_coroutines != null)
+		    foreach (var coroutine in _coroutines.Values)
+			    StopCoroutine(coroutine);
+    }
+	#endregion
 }

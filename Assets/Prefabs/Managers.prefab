@@ -82,8 +82,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_DoNotDestroyGameObjectOnLoad: 0
-  m_NStartLives: 1
-  m_NEnemiesToDestroyForVictory: 200
 --- !u!1 &1144974687821580
 GameObject:
   m_ObjectHideFlags: 0
@@ -419,12 +417,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_DoNotDestroyGameObjectOnLoad: 0
-  m_PanelMainMenu: {fileID: 0}
-  m_PanelInGameMenu: {fileID: 0}
-  m_PanelNextLevel: {fileID: 0}
-  m_PanelVictory: {fileID: 0}
-  m_PanelGameOver: {fileID: 0}
-  m_PanelCredits: {fileID: 0}
+  panelMainMenu: {fileID: 0}
+  panelGameModeSelection: {fileID: 0}
+  panelPlayerTypeSelection: {fileID: 0}
+  panelPlayerNumberSelection: {fileID: 0}
+  panelLevelSelection: {fileID: 0}
+  panelInGameMenu: {fileID: 0}
+  panelVictory: {fileID: 0}
+  panelGameOver: {fileID: 0}
+  panelCredits: {fileID: 0}
+  txtVictoryPlayer: {fileID: 0}
+  creditsDuration: 0
 --- !u!1 &1586310193520402
 GameObject:
   m_ObjectHideFlags: 0
@@ -558,12 +561,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_DoNotDestroyGameObjectOnLoad: 0
-  m_PanelHUD: {fileID: 0}
-  m_TxtBestScore: {fileID: 0}
-  m_TxtScore: {fileID: 0}
-  m_TxtNLives: {fileID: 0}
-  m_TxtNEnemiesLeftBeforeVictory: {fileID: 0}
-  m_TxtNPointsGainedForPowerCoin: {fileID: 0}
+  panelHUD: {fileID: 0}
+  txtBestScore: {fileID: 0}
+  txtEnemiesLeft: {fileID: 0}
+  txtTimeLeft: {fileID: 0}
+  playerOneScoreTransform: {fileID: 0}
+  playerTwoScoreTransform: {fileID: 0}
+  playerThreeScoreTransform: {fileID: 0}
+  playerFourScoreTransform: {fileID: 0}
 --- !u!1 &7743861828086358380
 GameObject:
   m_ObjectHideFlags: 0
