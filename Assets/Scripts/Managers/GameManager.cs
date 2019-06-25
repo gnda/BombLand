@@ -261,7 +261,6 @@ public class GameManager : Manager<GameManager>
         EventManager.Instance.Raise(new GameStatisticsChangedEvent() 
             { eBestScore = BestScore, ePlayerNumber = -1, 
                 eNMonstersLeft = Monsters.Count});
-        MusicLoopsManager.Instance.PlayMusic(Constants.GAMEPLAY_MUSIC);
         
         SetTimeScale(1);
         gameState = GameState.gamePlay;
@@ -445,7 +444,7 @@ public class GameManager : Manager<GameManager>
     
     private void Menu()
     {
-        SetTimeScale(0);
+        SetTimeScale(1);
         gameState = GameState.gameMenu;
         MusicLoopsManager.Instance.PlayMusic(Constants.MENU_MUSIC);
         EventManager.Instance.Raise(new GameMenuEvent());
@@ -454,6 +453,7 @@ public class GameManager : Manager<GameManager>
     private void Play(int levelNumber)
     {
         EventManager.Instance.Raise(new GamePlayEvent());
+        MusicLoopsManager.Instance.PlayMusic(levelNumber);
         InitNewGame(levelNumber);
     }
 
@@ -494,6 +494,7 @@ public class GameManager : Manager<GameManager>
     {
         SetTimeScale(1);
         gameState = GameState.gameCredits;
+        MusicLoopsManager.Instance.PlayMusic(Constants.MENU_MUSIC);
         EventManager.Instance.Raise(new GameCreditsEvent());
     }
 

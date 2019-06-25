@@ -75,11 +75,19 @@ public class MultiplayerButtonClickedEvent : SDD.Events.Event
 {
 }
 
-public class HostButtonClickedEvent : SDD.Events.Event
+public class CreateARoomButtonClickedEvent : SDD.Events.Event
 {
 }
 
-public class ClientButtonClickedEvent : SDD.Events.Event
+public class PseudoOkButtonClickedEvent : SDD.Events.Event
+{
+}
+
+public class JoinRoomButtonClickedEvent : SDD.Events.Event
+{
+}
+
+public class SendMessageButtonClickedEvent : SDD.Events.Event
 {
 }
 

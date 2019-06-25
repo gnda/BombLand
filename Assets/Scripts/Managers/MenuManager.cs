@@ -8,9 +8,7 @@ public class MenuManager : Manager<MenuManager>
 {
     #region Panels
     [Header("Panels")]
-    [SerializeField]
-    GameObject panelMainMenu;
-
+    [SerializeField] GameObject panelMainMenu;
     [SerializeField] GameObject panelGameModeSelection;
     [SerializeField] GameObject panelMultiplayerRoomChoice;
     [SerializeField] GameObject panelMultiplayerLobby;
@@ -30,6 +28,13 @@ public class MenuManager : Manager<MenuManager>
 
     List<GameObject> allPanels;
     #endregion
+    
+    #region Modals
+    [Header("Modals")]
+    [SerializeField] GameObject modalPseudo;
+    
+    List<GameObject> allModals;
+    #endregion
 
     #region Events' subscription
     public override void SubscribeEvents()
@@ -47,10 +52,11 @@ public class MenuManager : Manager<MenuManager>
         EventManager.Instance.AddListener<MultiplayerButtonClickedEvent>(MultiplayerButtonClicked);
         
         //Multiplayer Type Choice
-        EventManager.Instance.AddListener<HostButtonClickedEvent>(HostButtonClicked);
-        EventManager.Instance.AddListener<ClientButtonClickedEvent>(ClientButtonClicked);
+        EventManager.Instance.AddListener<CreateARoomButtonClickedEvent>(CreateARoomButtonClicked);
+        EventManager.Instance.AddListener<JoinRoomButtonClickedEvent>(JoinRoomButtonClicked);
         
         //Multiplayer Lobby
+        EventManager.Instance.AddListener<SendMessageButtonClickedEvent>(SendMessageButtonClicked);
         EventManager.Instance.AddListener<StartMultiplayerGameButtonClickedEvent>(StartMultiplayerGameButtonClicked);
         
         //Player Type Choice
@@ -62,6 +68,9 @@ public class MenuManager : Manager<MenuManager>
         EventManager.Instance.AddListener<TwoPlayerButtonClickedEvent>(TwoPlayerButtonClicked);
         EventManager.Instance.AddListener<ThreePlayerButtonClickedEvent>(ThreePlayerButtonClicked);
         EventManager.Instance.AddListener<FourPlayerButtonClickedEvent>(FourPlayerButtonClicked);
+        
+        //Modals
+        EventManager.Instance.AddListener<PseudoOkButtonClickedEvent>(PseudoOkButtonClicked);
     }
 
     public override void UnsubscribeEvents()
@@ -79,10 +88,11 @@ public class MenuManager : Manager<MenuManager>
         EventManager.Instance.RemoveListener<MultiplayerButtonClickedEvent>(MultiplayerButtonClicked);
         
         //Multiplayer Type Choice
-        EventManager.Instance.RemoveListener<HostButtonClickedEvent>(HostButtonClicked);
-        EventManager.Instance.RemoveListener<ClientButtonClickedEvent>(ClientButtonClicked);
+        EventManager.Instance.RemoveListener<CreateARoomButtonClickedEvent>(CreateARoomButtonClicked);
+        EventManager.Instance.RemoveListener<JoinRoomButtonClickedEvent>(JoinRoomButtonClicked);
         
         //Multiplayer Lobby
+        EventManager.Instance.RemoveListener<SendMessageButtonClickedEvent>(SendMessageButtonClicked);
         EventManager.Instance.RemoveListener<StartMultiplayerGameButtonClickedEvent>(StartMultiplayerGameButtonClicked);
         
         //Player Type Choice
@@ -94,6 +104,9 @@ public class MenuManager : Manager<MenuManager>
         EventManager.Instance.RemoveListener<TwoPlayerButtonClickedEvent>(TwoPlayerButtonClicked);
         EventManager.Instance.RemoveListener<ThreePlayerButtonClickedEvent>(ThreePlayerButtonClicked);
         EventManager.Instance.RemoveListener<FourPlayerButtonClickedEvent>(FourPlayerButtonClicked);
+        
+        //Modals
+        EventManager.Instance.RemoveListener<PseudoOkButtonClickedEvent>(PseudoOkButtonClicked);
     }
     #endregion
 
@@ -110,6 +123,7 @@ public class MenuManager : Manager<MenuManager>
     {
         base.Awake();
         RegisterPanels();
+        RegisterModals();
     }
 
     private void Update()
@@ -159,6 +173,21 @@ public class MenuManager : Manager<MenuManager>
         foreach (var item in allPanels)
             if (item)
                 item.SetActive(item == panel);
+    }
+    #endregion
+    
+    #region Modal Methods
+    void RegisterModals()
+    {
+        allModals = new List<GameObject>();
+        allModals.Add(modalPseudo);
+    }
+
+    void OpenModal(GameObject modal)
+    {
+        foreach (var item in allModals)
+            if (item)
+                item.SetActive(item == modal);
     }
     #endregion
 
@@ -226,14 +255,24 @@ public class MenuManager : Manager<MenuManager>
         EventManager.Instance.Raise(new MultiplayerButtonClickedEvent());
     }
     
-    public void HostButtonHasBeenClicked()
+    public void CreateARoomButtonHasBeenClicked()
     {
-        EventManager.Instance.Raise(new HostButtonClickedEvent());
+        EventManager.Instance.Raise(new CreateARoomButtonClickedEvent());
     }
     
-    public void ClientButtonHasBeenClicked()
+    public void PseudoOkButtonHasBeenClicked()
     {
-        EventManager.Instance.Raise(new ClientButtonClickedEvent());
+        EventManager.Instance.Raise(new PseudoOkButtonClickedEvent());
+    }
+    
+    public void JoinRoomButtonHasBeenClicked()
+    {
+        EventManager.Instance.Raise(new JoinRoomButtonClickedEvent());
+    }
+    
+    public void SendMessageButtonHasBeenClicked()
+    {
+        EventManager.Instance.Raise(new SendMessageButtonClickedEvent());
     }
     
     public void StartMultiplayerGameButtonHasBeenClicked()
@@ -312,17 +351,28 @@ public class MenuManager : Manager<MenuManager>
     #region Callbacks to Multiplayer UI events
     private void MultiplayerButtonClicked(MultiplayerButtonClickedEvent e)
     {
-        OpenPanel(panelPlayerNumberSelection);
+        OpenPanel(panelMultiplayerRoomChoice);
     }
     
-    private void HostButtonClicked(HostButtonClickedEvent e)
+    private void CreateARoomButtonClicked(CreateARoomButtonClickedEvent e)
     {
         OpenPanel(panelMultiplayerLobby);
+        OpenModal(modalPseudo);
     }
     
-    private void ClientButtonClicked(ClientButtonClickedEvent e)
+    private void PseudoOkButtonClicked(PseudoOkButtonClickedEvent e)
     {
-        OpenPanel(null);
+        OpenModal(null);
+    }
+    
+    private void JoinRoomButtonClicked(JoinRoomButtonClickedEvent e)
+    {
+        OpenPanel(panelMultiplayerLobby);
+        OpenModal(modalPseudo);
+    }
+    
+    private void SendMessageButtonClicked(SendMessageButtonClickedEvent e)
+    {
     }
     
     private void StartMultiplayerGameButtonClicked(StartMultiplayerGameButtonClickedEvent e)

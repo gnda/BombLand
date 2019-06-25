@@ -74,7 +74,7 @@ public class Level : MonoBehaviour, IEventHandler
         GameObject backgroundGO = Instantiate(backgroundPrefab, transform);
         Vector3 cameraPosition = Camera.main.transform.position;
         backgroundGO.transform.position = 
-            new Vector3(cameraPosition.x, -0.1f, 8);
+            new Vector3(cameraPosition.x, -0.1f, 8.15f);
         
         levelElements.transform.SetParent(transform);
         tilesGO.transform.SetParent(levelElements.transform);
@@ -87,8 +87,7 @@ public class Level : MonoBehaviour, IEventHandler
             for (j = 0, z = 0; j < levelDesign.height; j++, z++)
             {
                 Color c = levelDesign.GetPixel(i, j);
-                GameObject tileGO = GenerateTile(x, 0, z, Color.white, 
-                    tilesGO.transform);
+                GameObject tileGO = GenerateTile(x, 0, z, tilesGO.transform);
 
                 if (c == Color.black)
                 {
@@ -113,12 +112,11 @@ public class Level : MonoBehaviour, IEventHandler
         EventManager.Instance.Raise(new LevelHasBeenInstantiatedEvent() { eLevel = this });
     }
 
-    private GameObject GenerateTile(float x, float y, float z, Color c, Transform transf)
+    private GameObject GenerateTile(float x, float y, float z, Transform transf)
     {
         GameObject tile = Instantiate(groundTilePrefab, 
             new Vector3(x, y, z), Quaternion.identity, transf);
         tile.name = "Tile (" + x + ", " + z + ")";
-        tile.GetComponent<Renderer>().material.color = c;
 
         return tile;
     }
