@@ -52,6 +52,26 @@ Attention si un monstre vous voit il essaiera de vous poursuivre !
 Il faut également terminer le niveau et avoir détruit tous les monstres
 avant la fin du temps imparti, sinon on perd la partie.
 
+On a trois types de bombes :
+
+- une bombe normale :
+  - portée : 2 tuiles
+  - peut détruire jusqu'à 2 murs cassables
+
+- une super bombe :
+  - portée : 4 tuiles
+  - peut détruire jusqu'à 3 murs cassables
+
+- une bombe H :
+  - portée : 5 tuiles
+  - peut détruire jusqu'à 4 murs cassables
+
+Des bonus peuvent être ramassés durant la partie :
+
+- un bonus nous donnant une super bombe
+- un bonus nous donnant une bombe H
+- un bonus doublant la portée d'une bombe et sa capacité de destruction.
+
 -- Non Fonctionnel --
 
 On peut jouer en local jusqu'à 4 joueurs, ou alors jouer contre le CPU
@@ -67,52 +87,80 @@ II - Remarques, bugs connus, améliorations possibles
 -- Remarques
 
 Pour le moment le mode multijoueur online et local ne fonctionne pas.
-Je n'ai pas eu le temps d'améliorer le rendu graphique et sonore du jeu.
 
 J'ai voulu utiliser une matrice dans un premier temps pour repérer les
 éléments du jeu, mais au final j'ai préférer utiliser les raycasts afin de
-ne pas à avoir à actualiser cette matrice dans tous mes objets.
+ne pas à avoir à actualiser cette matrice dans tous mes objets et d'expérimenter
+cette façon de repérer des éléments.
 
 -- Bugs connus
 
 Si deux bombes sont proches l'une de l'autre, l'explosion de l'une
 n'entraîne pas l'explosion de l'autre.
 
+Les bonus augmentent les capacités des bombes mais ces améliorations persistent
+dans les niveaux suivant, surement parce que je modifie le prefab dans mon code...
+
+Quand une bombe explose et que sa portée est trop grande (à cause du bonus),
+les explosions sortent du level.
+
+L'ordinateur se suicide car je n'ai pas fini de coder l'IA. 
+
 -- Améliorations possibles
 
  - programmer une IA fonctionnelle pour le joueur adverse
  - terminer l'implémentation du multijoueur avec Photon Bolt
-
+ - implémenter un multijoueur local fonctionnel (je n'avais pas de manette...)
 
 III - Assets et éléments utilisés
 
 
-Pour ce projet, je me suis servi de : 
+Pour ce projet, je me suis servi de (ou j'ai modifié) : 
 
- - assets fait sous Unity (formes basiques) : gratuits tout comme Unity
+ - assets venant de l'Assets Store d'Unity (formes basiques) : gratuits tout comme Unity
    si on fait des profits en dessous de 100 000$ par an 
-   - licence : Unity Terms of Service.
+   licence : Unity Terms of Service.
+   - "Mobile depth water shader" by ValakhP
 
- - sons trouvés sur : 
+ - effets graphiques :
+  - "Shooty Skies Style Explosion" by James Heazlewood, tuto sur youtube.com
 
- - musiques trouvées sur : 
+ - musiques trouvées sur : Opengameart.org
+  - "Puzzle Tune 1" by rezoner licensed CC-BY 3.0
+  - "Desert Theme" by yd licensed CC0
+  - "Crystal Cave + Mysterious Ambience (seamless loop)" by
+  	cynicmusic licensed CC-BY 3.0, CC-BY-SA 3.0, GPL 3.0
+  - "Through Space" by maxstack licensed CC-BY-SA 3.0
 
- - plugin Photon Bolt en version Free permettant d'avoir jusqu'à
-   20 joueurs en parallèle (5 parties max ducoup)
-   - licence : Photon License Terms.
+ - effets sonores trouvés sur : Opengameart.com
+  - "8-Bit Sound Effects Library" by Little Robot Sound Factory licensed CC-BY 3.0
+  - "bomb_explosion_8bit" by Luke.RUSTLTD licensed CC0
 
- - UI fait avec :
+ - Je comptais utiliser Photon Bolt pour ce projet mais je l'ai retiré car le mode
+   multijoueur n'a pas été implémenté.
 
+ - Bouton de l'UI fait sous Gimp.
+
+ - modèles faits sous VoxEdit
+
+ - sons modifiés avec Audacity
+
+ - assets graphiques pour les backgrounds :
+  - sur Opengameart.com :
+   - "Simple Seamless tiles of dirt and sand" by LuminousDragonGames licensed CC0
+  - sur forums.rpgmakerweb.com :
+   - "Free Candy theme tileset" by Lemori licensed CC0
 
 IV - Rôles dans ce projet
 
 
 Dans ce projet je me suis focalisé sur les rôles suivants :
 
- - Gameplay programmer
- - Game / Level designer
+ - Gameplay Developer
+ - Game/Level designer
  - Producer
-
+ - 2D/3D Graphic designer
+ - Sound Designer
 
 Conclusion
 

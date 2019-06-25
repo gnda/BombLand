@@ -9398,7 +9398,10 @@ MonoBehaviour:
 
 
     Graphiste
-    2D / 3D'
+    2D / 3D
+
+
+    Sound Designer'
 --- !u!1 &7404958362472072062
 GameObject:
   m_ObjectHideFlags: 0
@@ -9478,7 +9481,7 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: "K\xE9vin Nandacoumar\n\nK\xE9vin Nandacoumar\n\nK\xE9vin Nandacoumar\n\nK\xE9vin
-    Nandacoumar"
+    Nandacoumar\n\nK\xE9vin Nandacoumar"
 --- !u!1 &7404958363203939709
 GameObject:
   m_ObjectHideFlags: 0
@@ -9496,7 +9499,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &7404958363203939650
 RectTransform:
   m_ObjectHideFlags: 0

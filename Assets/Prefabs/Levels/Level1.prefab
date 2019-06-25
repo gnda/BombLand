@@ -54,7 +54,13 @@ MonoBehaviour:
   enemyPrefabs:
   - {fileID: 237251078003386360, guid: 83a6667ccfb1d1de2bcec9a9b6aae1f1, type: 3}
   bombPrefabs:
-  - {fileID: 255279432704905292, guid: c207185cdd666a1cfb83f3127219c19c, type: 3}
+  - {fileID: 255279432704905292, guid: 3f39ba019ba451f88b919af111341940, type: 3}
+  - {fileID: 255279432704905292, guid: 8f1406824696dfcb4b93562b5e16aeca, type: 3}
+  - {fileID: 255279432704905292, guid: 88cf7b7bc73898fb9ae48cd449b961b0, type: 3}
+  bonusPrefabs:
+  - {fileID: 8736733865598789936, guid: 280500c435ac395ac88da105400eddde, type: 3}
+  - {fileID: 2488898588731325261, guid: e16e778f187ddaf58bffa6189e1e5192, type: 3}
+  - {fileID: 1837156060161150599, guid: 1934f8e435ff03ec48ba46444b07f653, type: 3}
   backgroundPrefab: {fileID: 1222784895490468750, guid: ef1bcaa5f988b41699188a9012998cd3,
     type: 3}
   groundTilePrefab: {fileID: 1098925979027782, guid: b94ba9115cbf341fd99ba437f4d77015,

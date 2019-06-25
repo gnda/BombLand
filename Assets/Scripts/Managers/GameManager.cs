@@ -256,7 +256,7 @@ public class GameManager : Manager<GameManager>
     {
         timer = e.eLevel.LevelDuration;
         nMonstersLeft = Monsters.Count;
-
+        
         EventManager.Instance.Raise(new GameHasStartedEvent());
         EventManager.Instance.Raise(new GameStatisticsChangedEvent() 
             { eBestScore = BestScore, ePlayerNumber = -1, 
@@ -453,7 +453,6 @@ public class GameManager : Manager<GameManager>
     private void Play(int levelNumber)
     {
         EventManager.Instance.Raise(new GamePlayEvent());
-        MusicLoopsManager.Instance.PlayMusic(levelNumber);
         InitNewGame(levelNumber);
     }
 

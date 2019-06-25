@@ -20,6 +20,7 @@ public class Level : MonoBehaviour, IEventHandler
     [SerializeField] private GameObject[] playerPrefabs;
     [SerializeField] private GameObject[] enemyPrefabs;
     [SerializeField] private GameObject[] bombPrefabs;
+    [SerializeField] private GameObject[] bonusPrefabs;
     [SerializeField] private GameObject backgroundPrefab;
     [SerializeField] private GameObject groundTilePrefab;
     [SerializeField] private GameObject wallPrefab;
@@ -54,7 +55,7 @@ public class Level : MonoBehaviour, IEventHandler
     #endregion
 
     #region Level generation
-    private GameObject levelElements, tilesGO, wallsGO, playersGO, monstersGO;
+    private GameObject levelElements, tilesGO, wallsGO, bonusesGO, playersGO, monstersGO;
     
     private void GenerateLevel()
     {
@@ -65,6 +66,7 @@ public class Level : MonoBehaviour, IEventHandler
         levelElements = new GameObject("Level Scene Elements");
         tilesGO = new GameObject("Tiles");
         wallsGO = new GameObject("Walls");
+        bonusesGO = new GameObject("Bonuses");
         
         //Moveable elements
         playersGO = new GameObject("Players");
@@ -79,6 +81,7 @@ public class Level : MonoBehaviour, IEventHandler
         levelElements.transform.SetParent(transform);
         tilesGO.transform.SetParent(levelElements.transform);
         wallsGO.transform.SetParent(levelElements.transform);
+        bonusesGO.transform.SetParent(levelElements.transform);
         playersGO.transform.SetParent(transform);
         monstersGO.transform.SetParent(transform);
 
@@ -98,6 +101,10 @@ public class Level : MonoBehaviour, IEventHandler
                 {
                     Instantiate(destroyableWallPrefab, new Vector3(x, 0.5f, z), 
                         Quaternion.identity, wallsGO.transform);
+                    if (Random.Range(0, 10) == 5)
+                        Instantiate(bonusPrefabs[Random.Range(0, bonusPrefabs.Length)], 
+                            new Vector3(x, 0.4f, z), Quaternion.identity,
+                            bonusesGO.transform);
                 } 
                 else if (c == Color.red)
                     SpawnMonster(tileGO.transform.position + Vector3.up * 0.5f);

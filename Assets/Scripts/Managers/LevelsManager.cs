@@ -50,6 +50,7 @@ public class LevelsManager : Manager<LevelsManager> {
 	void InstantiateLevel()
 	{
 		currentLevelIndex = Mathf.Max(currentLevelIndex, 0) % levelsPrefabs.Length;
+		MusicLoopsManager.Instance.PlayMusic(currentLevelIndex + 1);
 		currentLevelGO = Instantiate(levelsPrefabs[currentLevelIndex]);
 	}
 
@@ -77,12 +78,12 @@ public class LevelsManager : Manager<LevelsManager> {
 	public void GoToNextLevel(GoToNextLevelEvent e)
 	{
 		Player.PlayerCount = 0;
-		
+
 		if (e.eLevelIndex != -1)
 			currentLevelIndex = e.eLevelIndex;
 		else
 			currentLevelIndex++;
-		
+
 		StartCoroutine(GoToNextLevelCoroutine());
 	}
 	#endregion

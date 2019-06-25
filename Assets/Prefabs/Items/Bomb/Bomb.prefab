@@ -57,6 +57,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -122,7 +123,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 36c7ea6612bfb3746b06ae481f21288b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  explosionPrefab: {fileID: 8920526787297142589, guid: df63ad5e2195c89c79966a668f8bdfdf,
+  explosionPrefab: {fileID: 8920526787297142589, guid: b7c79e84d57bc8d6d8109ba30c44eb4b,
     type: 3}
   offDuration: 1
   litDuration: 2

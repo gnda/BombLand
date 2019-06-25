@@ -24,20 +24,30 @@ public class EnemyAIPlayer : SimpleGameStateObserver, IEventHandler, IMoveable{
     {
         get
         {
-            List<Vector3> directions = new List<Vector3>()
-                {Vector3.right, Vector3.forward, -Vector3.right, -Vector3.forward};
+            List<Vector3> lookingDirections = new List<Vector3>()
+            {
+                Vector3.right, Vector3.forward, -Vector3.right, -Vector3.forward, 
+                new Vector3(1,0,1), new Vector3(1,0,-1), 
+                new Vector3(-1,0,1), new Vector3(-1,0,-1)
+            };
+            
+            List<Vector3> movingDirections = new List<Vector3>()
+            {
+                Vector3.right, Vector3.forward, -Vector3.right, -Vector3.forward
+            };
 
-            for (int i = directions.Count - 1; i >= 0; i--)
+            for (int i = lookingDirections.Count - 1; i >= 0; i--)
             {
                 List<RaycastHit> hits;
-                hits = Physics.RaycastAll(Transf.position, directions[i]).ToList();
+                hits = Physics.RaycastAll(Transf.position, lookingDirections[i]).ToList();
 
                 hits.Sort((a, b) => Vector3
                     .Distance(Transf.position, a.transform.position).CompareTo(
                     Vector3.Distance(Transf.position, b.transform.position)));
 
                 if (hits[0].transform.GetComponent<Destroyable>() &&
-                               hits[0].transform.CompareTag("Platform"))
+                               hits[0].transform.CompareTag("Platform") && 
+                               Time.time > nextDropTime)
                 {
                     GameObject bombGO = Instantiate(GetComponent<Player>().bombPrefab,
                         GetComponentInParent<Level>().transform);
@@ -47,33 +57,38 @@ public class EnemyAIPlayer : SimpleGameStateObserver, IEventHandler, IMoveable{
 
                     nextDropTime = Time.time + dropCoolDownDuration;
 
-                    directions.RemoveAt(i);
+                    lookingDirections.RemoveAt(i);
                     break;
                 }
 
                 foreach (var hit in hits)
                 {
-                    Debug.DrawLine(Transf.position, hit.point, Color.red, 100f);
-
                     if (hit.transform.GetComponent<Player>() ||
                         hit.transform.GetComponent<Monster>())
-                        return directions[i];
-                    else if (hit.transform.GetComponent<Bomb>() ||
+                    {
+                        lookingDirections.RemoveAll(item => item != lookingDirections[i]);
+                        i = 0;
+                        break;
+                    } else if (hit.transform.GetComponent<Bomb>() ||
                              hit.transform.GetComponent<Explosion>())
                     {
-                        directions.RemoveAt(i);
+                        lookingDirections.RemoveAt(i);
                         break;
                     }
                 }
-
+                
                 /*if (hit.transform.GetComponent<Player>())
                     return directions[i];*/
 
                 /*if (i < directions.Count - 1)
                     directions.RemoveAt(Random.Range(0, 2) == 0 ? i + 1 : i);*/
             }
+            
+            movingDirections.Sort((a, b) => Vector3
+                .Distance(lookingDirections[0], a).CompareTo(
+                    Vector3.Distance(lookingDirections[0], b)));
 
-            return directions[0];
+            return movingDirections[0];
             //return Vector3.zero;
         }
     }

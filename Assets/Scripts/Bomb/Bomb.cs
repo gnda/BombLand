@@ -15,11 +15,23 @@ public class Bomb : MonoBehaviour
     [SerializeField] private float explosionDuration;
     [SerializeField] private int baseTileExplosionRange;
     [SerializeField] private int baseWallExplosionRange;
-    
+
     public float ExplosionDuration { 
         get => explosionDuration;
         set => explosionDuration = value;
     }
+
+    public int BaseWallExplosionRange
+    {
+        get => baseWallExplosionRange;
+        set => baseWallExplosionRange = value;
+    }
+    public int BaseTileExplosionRange
+    {
+        get => baseTileExplosionRange;
+        set => baseTileExplosionRange = value;
+    }
+
     #endregion
     public Player Player { get; set; }
 
@@ -34,12 +46,14 @@ public class Bomb : MonoBehaviour
     IEnumerator LightTheBombCoroutine()
     {
         yield return new WaitForSeconds(litDuration);
+        SfxManager.Instance.PlaySfx(Constants.EXPLOSION_SFX);
         explode();
         Destroy(gameObject);
     }
 
     IEnumerator TheBombIsOff()
     {
+        SfxManager.Instance.PlaySfx(Constants.DROP_SFX);
         yield return new WaitForSeconds(offDuration);
         StartCoroutine(LightTheBombCoroutine());
     }
